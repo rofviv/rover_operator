@@ -1,21 +1,22 @@
 import 'package:dio/dio.dart';
 
 import 'relay_model.dart';
+import 'rover_status_mode.dart';
 
 abstract class RoverRepository {
-  Future<void> getAllDataRover(String baseUrl);
+  Future<RoverStatusModel> getStatusRover(String baseUrl);
   Future<RelayModel> getRelayRover(String baseUrl);
-  Future<void> toggleRelayRover(String baseUrl, String relayNumber);
+  Future<RelayModel> toggleRelayRover(String baseUrl, String relayNumber);
 }
 
 class RoverRepositoryImpl implements RoverRepository {
   final Dio dio = Dio();
 
   @override
-  Future<void> getAllDataRover(String baseUrl) async {
+  Future<RoverStatusModel> getStatusRover(String baseUrl) async {
     try {
       final response = await dio.get('http://$baseUrl/');
-      print(response.data);
+      return RoverStatusModel.fromJson(response.data);
     } catch (e) {
       throw Exception(e);
     }
@@ -32,7 +33,7 @@ class RoverRepositoryImpl implements RoverRepository {
   }
 
   @override
-  Future<void> toggleRelayRover(String baseUrl, String relayNumber) async {
+  Future<RelayModel> toggleRelayRover(String baseUrl, String relayNumber) async {
     try {
       final response = await dio.post(
         'http://$baseUrl/toggle_data_relay',
@@ -40,7 +41,7 @@ class RoverRepositoryImpl implements RoverRepository {
           'relay_id': relayNumber,
         },
       );
-      print(response.data);
+      return RelayModel.fromMap(response.data);
     } catch (e) {
       throw Exception(e);
     }
