@@ -100,6 +100,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
+  Future<void> toggleRelayRover(String relayNumber) async {
+    try {
+      // TODO: RELAY NUMBER modificable por el usuario
+      final status = await roverRepository.toggleRelayRover(state.ipRemote, relayNumber);
+      // TODO: update relay DATA
+    } catch (e) {
+      add(DashboardErrorMessageEvent(e.toString()));
+    }
+  }
+
   void _playAudio(bool isActive, AudioHelper audioHelper) {
     if (isActive) {
       audioHelper.playAudio();
