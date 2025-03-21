@@ -61,12 +61,12 @@ class DashboardActionsWidget extends StatelessWidget {
                               color: Colors.white,
                             )
                           : Tooltip(
-                              message: state.errorMessage,
+                              message: state.errorMessageHost,
                               child: GestureDetector(
-                                onTap: () => dashboardBloc.getRelayRover(),
+                                onTap: () => dashboardBloc.syncDataRover(),
                                 child: Icon(
                                   Icons.circle,
-                                  color: state.errorMessage.isNotEmpty
+                                  color: state.errorMessageHost.isNotEmpty
                                       ? Colors.red
                                       : Colors.green,
                                   size: 14,
@@ -83,17 +83,17 @@ class DashboardActionsWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      (state.isLoading)
+                      (state.isLoadingRelay)
                           ? const CupertinoActivityIndicator(
                               color: Colors.white,
                             )
                           : Tooltip(
-                              message: state.errorMessage,
+                              message: state.errorMessageRelay,
                               child: GestureDetector(
-                                onTap: () => dashboardBloc.getRelayRover(),
+                                onTap: () => dashboardBloc.syncDataRover(),
                                 child: Icon(
                                   Icons.circle,
-                                  color: state.errorMessage.isNotEmpty
+                                  color: state.errorMessageRelay.isNotEmpty
                                       ? Colors.red
                                       : Colors.green,
                                   size: 14,
@@ -111,7 +111,8 @@ class DashboardActionsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Tooltip(
-                        message: "${state.relaysMap[Relays.leftArrow]!.name} (${state.relaysMap[Relays.leftArrow]!.shortcut})",
+                        message:
+                            "${state.relaysMap[Relays.leftArrow]!.name} (${state.relaysMap[Relays.leftArrow]!.shortcut})",
                         // message: "${state.leftArrow.name} (${state.leftArrow.shortcut})",
                         child: GestureDetector(
                           onTap: () =>
@@ -275,7 +276,7 @@ class DashboardActionsWidget extends StatelessWidget {
                               ),
                               gradient: RadialGradient(
                                 colors: [
-                                  state.rightArrow
+                                  state.relaysMap[Relays.rightArrow]!.status
                                       ? Colors.amberAccent
                                           .withValues(alpha: 0.1)
                                       : Colors.black,
@@ -293,7 +294,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: state.rightArrow
+                            child: state.relaysMap[Relays.rightArrow]!.status
                                 ? Center(
                                     child: Image.asset(
                                       'assets/icons/right_arrow.png',

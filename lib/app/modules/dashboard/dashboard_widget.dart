@@ -40,7 +40,7 @@ class DashboardWidget extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                                dashboardBloc.getStatusRover();
+                                dashboardBloc.syncDataRover();
                               },
                               icon: const Icon(Icons.settings),
                             ),

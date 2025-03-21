@@ -12,7 +12,6 @@ class AudioHelper {
   }
 
   Future<void> playAudio() async {
-    await _audioPlayer.stop();
     await _audioPlayer.play(AssetSource("sounds/$fileName"));
   }
 

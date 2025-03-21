@@ -1,9 +1,9 @@
+import '../../../core/helpers/audio_helper.dart';
 import '../data/relay_action.dart';
-import 'audio_key.dart';
 
 enum Relays {
   leftArrow,
-  // rightArrow,
+  rightArrow,
   // parking,
   // door,
   // light,
@@ -15,15 +15,15 @@ final Map<Relays, RelayAction> relaysMap = {
   Relays.leftArrow: RelayAction(
       id: "leftArrow",
       name: "Left Arrow",
-      audio: audioLeftArrow,
+      audio: AudioHelper("light.mp3"),
       relay: 1,
       shortcut: "ALT + LEFT"),
-  // Relays.rightArrow: RelayAction(
-  //     id: "rightArrow",
-  //     name: "Right Arrow",
-  //     audio: audioRightArrow,
-  //     relay: 2,
-  //     shortcut: "ALT + RIGHT"),
+  Relays.rightArrow: RelayAction(
+      id: "rightArrow",
+      name: "Right Arrow",
+      audio: AudioHelper("light.mp3"),
+      relay: 2,
+      shortcut: "ALT + RIGHT"),
   // Relays.parking: RelayAction(
   //     id: "parking",
   //     name: "Parking",

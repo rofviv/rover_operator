@@ -31,14 +31,24 @@ class DashboardIpRemoteEvent extends DashboardEvent {
   const DashboardIpRemoteEvent(this.ipRemote);
 }
 
-class DashboardErrorMessageEvent extends DashboardEvent {
+class DashboardErrorMessageHostEvent extends DashboardEvent {
   final String errorMessage;
-  const DashboardErrorMessageEvent(this.errorMessage);
+  const DashboardErrorMessageHostEvent(this.errorMessage);
+}
+
+class DashboardErrorMessageRelayEvent extends DashboardEvent {
+  final String errorMessage;
+  const DashboardErrorMessageRelayEvent(this.errorMessage);
 }
 
 class DashboardIsLoadingEvent extends DashboardEvent {
   final bool isLoading;
   const DashboardIsLoadingEvent(this.isLoading);
+}
+
+class DashboardIsLoadingRelayEvent extends DashboardEvent {
+  final bool isLoadingRelay;
+  const DashboardIsLoadingRelayEvent(this.isLoadingRelay);
 }
 
 class DashboardSetRoverStatusEvent extends DashboardEvent {

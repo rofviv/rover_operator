@@ -2,14 +2,15 @@ part of 'dashboard_bloc.dart';
 
 class DashboardState extends Equatable {
   final bool isLoading;
+  final bool isLoadingRelay;
   final String ipRemote;
   final double sizeIcon;
   final Map<Relays, RelayAction> relaysMap;
   // final RelayAction leftArrow;
   // final bool leftArrow;
   // final int relayLeftArrow;
-  final bool rightArrow;
-  final int relayRightArrow;
+  // final bool rightArrow;
+  // final int relayRightArrow;
   final bool parking;
   final bool door;
   final int relayDoor;
@@ -20,21 +21,23 @@ class DashboardState extends Equatable {
   final bool retro;
   final int relayRetro;
   final DateTime? lastSync;
-  final String errorMessage;
+  final String errorMessageHost;
+  final String errorMessageRelay;
 
   final RoverStatusModel roverStatus;
   final RelayModel relay;
 
   const DashboardState({
     this.isLoading = false,
+    this.isLoadingRelay = false,
     this.ipRemote = '10.13.13.x',
     this.sizeIcon = 35,
     required this.relaysMap,
     // this.leftArrow = false,
     // this.relayLeftArrow = 1,
     // required this.leftArrow,
-    this.rightArrow = false,
-    this.relayRightArrow = 2,
+    // this.rightArrow = false,
+    // this.relayRightArrow = 2,
     this.parking = false,
     this.door = false,
     this.relayDoor = 3,
@@ -45,21 +48,23 @@ class DashboardState extends Equatable {
     this.retro = false,
     this.relayRetro = 6,
     this.lastSync,
-    this.errorMessage = "",
+    this.errorMessageHost = "",
+    this.errorMessageRelay = "",
     required this.roverStatus,
     required this.relay,
   });
 
   DashboardState copyWith({
     bool? isLoading,
+    bool? isLoadingRelay,
     String? ipRemote,
     double? sizeIcon,
     Map<Relays, RelayAction>? relaysMap,
     // RelayAction? leftArrow,
     // bool? leftArrow,
     // int? relayLeftArrow,
-    bool? rightArrow,
-    int? relayRightArrow,
+    // bool? rightArrow,
+    // int? relayRightArrow,
     bool? parking,
     bool? door,
     int? relayDoor,
@@ -70,20 +75,22 @@ class DashboardState extends Equatable {
     bool? retro,
     int? relayRetro,
     DateTime? lastSync,
-    String? errorMessage,
+    String? errorMessageHost,
+    String? errorMessageRelay,
     RoverStatusModel? roverStatus,
     RelayModel? relay,
   }) {
     return DashboardState(
       isLoading: isLoading ?? this.isLoading,
+      isLoadingRelay: isLoadingRelay ?? this.isLoadingRelay,
       ipRemote: ipRemote ?? this.ipRemote,
       sizeIcon: sizeIcon ?? this.sizeIcon,
       relaysMap: relaysMap ?? this.relaysMap,
       // leftArrow: leftArrow ?? this.leftArrow,
       // leftArrow: leftArrow ?? this.leftArrow,
       // relayLeftArrow: relayLeftArrow ?? this.relayLeftArrow,
-      rightArrow: rightArrow ?? this.rightArrow,
-      relayRightArrow: relayRightArrow ?? this.relayRightArrow,
+      // rightArrow: rightArrow ?? this.rightArrow,
+      // relayRightArrow: relayRightArrow ?? this.relayRightArrow,
       parking: parking ?? this.parking,
       door: door ?? this.door,
       relayDoor: relayDoor ?? this.relayDoor,
@@ -94,7 +101,8 @@ class DashboardState extends Equatable {
       retro: retro ?? this.retro,
       relayRetro: relayRetro ?? this.relayRetro,
       lastSync: lastSync ?? this.lastSync,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessageHost: errorMessageHost ?? this.errorMessageHost,
+      errorMessageRelay: errorMessageRelay ?? this.errorMessageRelay,
       roverStatus: roverStatus ?? this.roverStatus,
       relay: relay ?? this.relay,
     );
@@ -103,13 +111,14 @@ class DashboardState extends Equatable {
   @override
   List<Object?> get props => [
         isLoading,
+        isLoadingRelay,
         ipRemote,
         sizeIcon,
         relaysMap,
         // leftArrow,
         // relayLeftArrow,
-        rightArrow,
-        relayRightArrow,
+        // rightArrow,
+        // relayRightArrow,
         parking,
         door,
         relayDoor,
@@ -119,7 +128,8 @@ class DashboardState extends Equatable {
         relayClaxon,
         retro,
         lastSync,
-        errorMessage,
+        errorMessageHost,
+        errorMessageRelay,
         roverStatus,
         relay,
       ];

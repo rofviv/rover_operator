@@ -26,14 +26,15 @@ class RoverRepositoryImpl implements RoverRepository {
   Future<RelayModel> getRelayRover(String baseUrl) async {
     try {
       final response = await dio.get('http://$baseUrl/sync_data_relay');
-      return RelayModel.fromMap(response.data);
+      return RelayModel.fromMap(response.data["data"]);
     } catch (e) {
       throw Exception(e);
     }
   }
 
   @override
-  Future<RelayModel> toggleRelayRover(String baseUrl, String relayNumber) async {
+  Future<RelayModel> toggleRelayRover(
+      String baseUrl, String relayNumber) async {
     try {
       final response = await dio.post(
         'http://$baseUrl/toggle_data_relay',

@@ -21,7 +21,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       : super(
           DashboardState(
             relaysMap: relaysMap,
-            // leftArrow: RelayAction(id: "leftArrow", name: "Left Arrow", audio: audioLeftArrow, relay: 1, shortcut: "ALT + LEFT"),
             roverStatus: RoverStatusModel(),
             relay: RelayModel(),
           ),
@@ -34,42 +33,32 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         final map = {...state.relaysMap};
         map[Relays.leftArrow] = map[Relays.leftArrow]!
             .copyWith(status: !map[Relays.leftArrow]!.status);
-        if (state.rightArrow) {
-          audioRightArrow.stopAudio();
-
-          emit(state.copyWith(relaysMap: map, rightArrow: false));
-          // emit(state.copyWith(leftArrow: state.leftArrow.copyWith(status: true), rightArrow: false));
-          toggleRelayRover(state.relayRightArrow.toString());
-        } else {
-          emit(state.copyWith(relaysMap: map));
-          // emit(state.copyWith(leftArrow: state.leftArrow.copyWith(status: !state.leftArrow.status)));
+        if (map[Relays.rightArrow]!.status) {
+          map[Relays.rightArrow] =
+              map[Relays.rightArrow]!.copyWith(status: false);
+          map[Relays.rightArrow]!.audio.stopAudio();
+          toggleRelayRover(map[Relays.rightArrow]!.relay.toString());
         }
-        // toggleRelayRover(state.leftArrow.relay.toString());
+        emit(state.copyWith(relaysMap: map));
         toggleRelayRover(map[Relays.leftArrow]!.relay.toString());
-        // _playAudio(state.leftArrow.status, state.leftArrow.audio);
         _playAudio(map[Relays.leftArrow]!.status, map[Relays.leftArrow]!.audio);
       }
     });
     on<DashboardRightArrowEvent>((event, emit) {
       if (!state.parking) {
         final map = {...state.relaysMap};
-        // // if (state.leftArrow.status) {
+        map[Relays.rightArrow] = map[Relays.rightArrow]!
+            .copyWith(status: !map[Relays.rightArrow]!.status);
         if (map[Relays.leftArrow]!.status) {
           map[Relays.leftArrow]!.audio.stopAudio();
-          //   state.leftArrow.audio.stopAudio();
           map[Relays.leftArrow] =
               map[Relays.leftArrow]!.copyWith(status: false);
-          emit(state.copyWith(rightArrow: !state.rightArrow, relaysMap: map));
           toggleRelayRover(map[Relays.leftArrow]!.relay.toString());
-          //   emit(state.copyWith(
-          //       rightArrow: !state.rightArrow,
-          //       leftArrow: state.leftArrow.copyWith(status: false)));
-          //   toggleRelayRover(state.leftArrow.relay.toString());
-        } else {
-          emit(state.copyWith(rightArrow: !state.rightArrow));
         }
-        toggleRelayRover(state.relayRightArrow.toString());
-        _playAudio(state.rightArrow, audioRightArrow);
+        emit(state.copyWith(relaysMap: map));
+        toggleRelayRover(map[Relays.rightArrow]!.relay.toString());
+        _playAudio(
+            map[Relays.rightArrow]!.status, map[Relays.rightArrow]!.audio);
       }
     });
     on<DashboardParkingEvent>((event, emit) {
@@ -79,29 +68,26 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           toggleRelayRover(map[Relays.leftArrow]!.relay.toString());
           map[Relays.leftArrow]!.audio.stopAudio();
         }
-        // if (state.leftArrow.status) {
-        //   toggleRelayRover(state.leftArrow.relay.toString());
-        //   state.leftArrow.audio.stopAudio();
-        // }
-        if (state.rightArrow) {
-          toggleRelayRover(state.relayRightArrow.toString());
-          audioRightArrow.stopAudio();
+        if (map[Relays.rightArrow]!.status) {
+          toggleRelayRover(map[Relays.rightArrow]!.relay.toString());
+          map[Relays.rightArrow]!.audio.stopAudio();
         }
         toggleRelayRover(map[Relays.leftArrow]!.relay.toString());
-        // toggleRelayRover(state.leftArrow.relay.toString());
-        toggleRelayRover(state.relayRightArrow.toString());
+        toggleRelayRover(map[Relays.rightArrow]!.relay.toString());
       } else {
-        // toggleRelayRover(state.leftArrow.relay.toString());
         toggleRelayRover(map[Relays.leftArrow]!.relay.toString());
-        toggleRelayRover(state.relayRightArrow.toString());
+        toggleRelayRover(map[Relays.rightArrow]!.relay.toString());
       }
       map[Relays.leftArrow] =
           map[Relays.leftArrow]!.copyWith(status: !state.parking);
-      emit(state.copyWith(
+      map[Relays.rightArrow] =
+          map[Relays.rightArrow]!.copyWith(status: !state.parking);
+      emit(
+        state.copyWith(
           parking: !state.parking,
           relaysMap: map,
-          // leftArrow: state.leftArrow.copyWith(status: !state.parking),
-          rightArrow: !state.parking));
+        ),
+      );
 
       _playAudio(state.parking, audioParking);
     });
@@ -127,12 +113,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     on<DashboardIpRemoteEvent>((event, emit) {
       emit(state.copyWith(ipRemote: event.ipRemote));
+      syncDataRover();
     });
-    on<DashboardErrorMessageEvent>((event, emit) {
-      emit(state.copyWith(errorMessage: event.errorMessage));
+    on<DashboardErrorMessageHostEvent>((event, emit) {
+      emit(state.copyWith(errorMessageHost: event.errorMessage));
+    });
+    on<DashboardErrorMessageRelayEvent>((event, emit) {
+      emit(state.copyWith(errorMessageRelay: event.errorMessage));
     });
     on<DashboardIsLoadingEvent>((event, emit) {
       emit(state.copyWith(isLoading: event.isLoading));
+    });
+    on<DashboardIsLoadingRelayEvent>((event, emit) {
+      emit(state.copyWith(isLoadingRelay: event.isLoadingRelay));
     });
     on<DashboardSetRoverStatusEvent>((event, emit) {
       emit(state.copyWith(roverStatus: event.roverStatus));
@@ -141,6 +134,24 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       emit(state.copyWith(relay: event.relay));
     });
     on<DashboardSetRelaysMapEvent>((event, emit) {
+      if (event.relaysMap[Relays.leftArrow]!.status !=
+              state.relaysMap[Relays.leftArrow]!.status ||
+          event.relaysMap[Relays.rightArrow]!.status !=
+              state.relaysMap[Relays.rightArrow]!.status) {
+        if (event.relaysMap[Relays.leftArrow]!.status &&
+            event.relaysMap[Relays.rightArrow]!.status &&
+            !state.parking) {
+          event.relaysMap[Relays.leftArrow]!.audio.stopAudio();
+          event.relaysMap[Relays.rightArrow]!.audio.stopAudio();
+          _playAudio(true, audioParking);
+          emit(state.copyWith(parking: true));
+        } else if (!event.relaysMap[Relays.leftArrow]!.status &&
+            !event.relaysMap[Relays.rightArrow]!.status &&
+            state.parking) {
+          _playAudio(false, audioParking);
+          emit(state.copyWith(parking: false));
+        }
+      }
       emit(state.copyWith(relaysMap: event.relaysMap));
     });
     syncDataRover();
@@ -163,25 +174,26 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Future<void> getRelayRover() async {
     try {
-      add(const DashboardIsLoadingEvent(true));
-      add(const DashboardErrorMessageEvent(''));
+      add(const DashboardIsLoadingRelayEvent(true));
+      add(const DashboardErrorMessageRelayEvent(''));
       final relay = await roverRepository.getRelayRover(state.ipRemote);
       add(DashboardSetRelayEvent(relay));
+      await parseRelay(relay);
     } catch (e) {
-      add(DashboardErrorMessageEvent(e.toString()));
+      add(DashboardErrorMessageRelayEvent(e.toString()));
     } finally {
-      add(const DashboardIsLoadingEvent(false));
+      add(const DashboardIsLoadingRelayEvent(false));
     }
   }
 
   Future<void> getStatusRover() async {
     try {
       add(const DashboardIsLoadingEvent(true));
-      add(const DashboardErrorMessageEvent(''));
+      add(const DashboardErrorMessageHostEvent(''));
       final roverStatus = await roverRepository.getStatusRover(state.ipRemote);
       add(DashboardSetRoverStatusEvent(roverStatus));
     } catch (e) {
-      add(DashboardErrorMessageEvent(e.toString()));
+      add(DashboardErrorMessageHostEvent(e.toString()));
     } finally {
       add(const DashboardIsLoadingEvent(false));
     }
@@ -190,29 +202,45 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> toggleRelayRover(String relayNumber) async {
     try {
       // TODO: RELAY NUMBER modificable por el usuario
-      add(const DashboardErrorMessageEvent(''));
+      add(const DashboardErrorMessageRelayEvent(''));
       final relay =
           await roverRepository.toggleRelayRover(state.ipRemote, relayNumber);
       add(DashboardSetRelayEvent(relay));
     } catch (e) {
-      add(DashboardErrorMessageEvent(e.toString()));
+      add(DashboardErrorMessageRelayEvent(e.toString()));
     }
   }
 
-  void parseRelay(RelayModel relay) {
-    // TODO: IDENTIFICAR EL RELAY QUE SE ACTIVA
-    final map = {...state.relaysMap};
-    final relayInt = relay.relay1;
+  Future<void> parseRelay(RelayModel relay) async {
+    Map<Relays, RelayAction> map = {...state.relaysMap};
+    map = await _readListRelays(1, relay.relay1 ?? 0, map) ?? map;
+    map = await _readListRelays(2, relay.relay2 ?? 0, map) ?? map;
+    map = await _readListRelays(3, relay.relay3 ?? 0, map) ?? map;
+    map = await _readListRelays(4, relay.relay4 ?? 0, map) ?? map;
+    map = await _readListRelays(5, relay.relay5 ?? 0, map) ?? map;
+    map = await _readListRelays(6, relay.relay6 ?? 0, map) ?? map;
+    map = await _readListRelays(7, relay.relay7 ?? 0, map) ?? map;
+    map = await _readListRelays(8, relay.relay8 ?? 0, map) ?? map;
+    add(DashboardSetRelaysMapEvent(map));
+  }
+
+  Future<Map<Relays, RelayAction>?> _readListRelays(
+      int relayNumber, int relayStatus, Map<Relays, RelayAction> map) async {
     try {
       final entry = map.entries.firstWhere(
-        (entry) => entry.value.relay == relayInt,
+        (entry) => entry.value.relay == relayNumber,
       );
-      if (relayInt == 1) {
-        // map[entry.key] = entry.value.copyWith(status: true);
-        add(DashboardLeftArrowEvent());
+      if (relayStatus == 1 && !entry.value.status) {
+        map[entry.key] = map[entry.key]!.copyWith(status: true);
+        await entry.value.audio.playAudio();
+      } else if (relayStatus == 0 && entry.value.status) {
+        map[entry.key] = map[entry.key]!.copyWith(status: false);
+        await entry.value.audio.stopAudio();
       }
+      return map;
     } catch (e) {
-      //
+      print(e);
+      return null;
     }
   }
 
