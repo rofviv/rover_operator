@@ -5,10 +5,10 @@ enum Relays {
   leftArrow,
   rightArrow,
   // parking,
-  // door,
-  // light,
-  // claxon,
-  // retro,
+  door,
+  light,
+  claxon,
+  retro,
 }
 
 final Map<Relays, RelayAction> relaysMap = {
@@ -30,28 +30,28 @@ final Map<Relays, RelayAction> relaysMap = {
   //     audio: audioParking,
   //     relay: 3,
   //     shortcut: "ALT + P"),
-  // Relays.door: RelayAction(
-  //     id: "door",
-  //     name: "Door",
-  //     audio: audioDoor,
-  //     relay: 4,
-  //     shortcut: "ALT + D"),
-  // Relays.light: RelayAction(
-  //     id: "light",
-  //     name: "Light",
-  //     audio: audioLight,
-  //     relay: 5,
-  //     shortcut: "ALT + L"),
-  // Relays.claxon: RelayAction(
-  //     id: "claxon",
-  //     name: "Claxon",
-  //     audio: audioClaxon,
-  //     relay: 6,
-  //     shortcut: "ALT + C"),
-  // Relays.retro: RelayAction(
-  //     id: "retro",
-  //     name: "Retro",
-  //     audio: audioRetro,
-  //     relay: 7,
-  //     shortcut: "ALT + R"),
+   Relays.door: RelayAction(
+       id: "door",
+       name: "Door",
+       audio: AudioHelper("door.mp3"),
+       relay: 4,
+       shortcut: "ALT + D"),
+  Relays.light: RelayAction(
+      id: "light",
+      name: "Light",
+      audio: AudioHelper("beep.mp3", loop: false),
+      relay: 5,
+      shortcut: "ALT + L"),
+  Relays.claxon: RelayAction(
+      id: "claxon",
+      name: "Claxon",
+      audio: AudioHelper("beep.mp3", loop: false),
+      relay: 6,
+      shortcut: "ALT + C"),
+  Relays.retro: RelayAction(
+      id: "retro",
+      name: "Retro",
+      audio: AudioHelper("back.mp3"),
+      relay: 7,
+      shortcut: "ALT + R"),
 };

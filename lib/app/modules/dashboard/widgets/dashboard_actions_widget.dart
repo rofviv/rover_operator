@@ -197,7 +197,7 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 20),
                             Tooltip(
-                              message: 'Door (ALT + D)',
+                              message: "${state.relaysMap[Relays.door]!.name} (${state.relaysMap[Relays.door]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardDoorEvent()),
@@ -206,7 +206,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                   child: Image.asset(
                                     'assets/icons/car_door.png',
                                     width: state.sizeIcon,
-                                    color: state.door
+                                    color: state.relaysMap[Relays.door]!.status
                                         ? Colors.amberAccent
                                         : Colors.grey.shade700,
                                   ),
@@ -215,14 +215,14 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 20),
                             Tooltip(
-                              message: 'Light (ALT + L)',
+                              message: "${state.relaysMap[Relays.light]!.name} (${state.relaysMap[Relays.light]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardLightEvent()),
                                 child: Image.asset(
                                   'assets/icons/light.png',
                                   width: state.sizeIcon,
-                                  color: state.light
+                                  color: state.relaysMap[Relays.light]!.status
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
                                 ),
@@ -230,14 +230,14 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 20),
                             Tooltip(
-                              message: 'Claxon (ALT + C)',
+                              message: "${state.relaysMap[Relays.claxon]!.name} (${state.relaysMap[Relays.claxon]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardClaxonEvent()),
                                 child: Image.asset(
                                   'assets/icons/volume.png',
                                   width: state.sizeIcon,
-                                  color: state.claxon
+                                  color: state.relaysMap[Relays.claxon]!.status
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
                                 ),
@@ -245,14 +245,14 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 20),
                             Tooltip(
-                              message: 'Retro (ALT + R)',
+                              message: "${state.relaysMap[Relays.retro]!.name} (${state.relaysMap[Relays.retro]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardRetroEvent()),
                                 child: Image.asset(
                                   'assets/icons/R.png',
                                   width: state.sizeIcon,
-                                  color: state.retro
+                                  color: state.relaysMap[Relays.retro]!.status
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
                                 ),

@@ -92,24 +92,32 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       _playAudio(state.parking, audioParking);
     });
     on<DashboardDoorEvent>((event, emit) {
-      emit(state.copyWith(door: !state.door));
-      toggleRelayRover(state.relayDoor.toString());
-      _playAudio(state.door, audioDoor);
+      final map = {...state.relaysMap};
+      map[Relays.door] = map[Relays.door]!.copyWith(status: !map[Relays.door]!.status);
+      emit(state.copyWith(relaysMap: map));
+      toggleRelayRover(map[Relays.door]!.relay.toString());
+      _playAudio(map[Relays.door]!.status, map[Relays.door]!.audio);
     });
     on<DashboardLightEvent>((event, emit) {
-      emit(state.copyWith(light: !state.light));
-      toggleRelayRover(state.relayLight.toString());
-      _playAudio(state.light, audioLight);
+      final map = {...state.relaysMap};
+      map[Relays.light] = map[Relays.light]!.copyWith(status: !map[Relays.light]!.status);
+      emit(state.copyWith(relaysMap: map));
+      toggleRelayRover(map[Relays.light]!.relay.toString());
+      _playAudio(map[Relays.light]!.status, map[Relays.light]!.audio);
     });
     on<DashboardClaxonEvent>((event, emit) {
-      emit(state.copyWith(claxon: !state.claxon));
-      toggleRelayRover(state.relayClaxon.toString());
-      _playAudio(state.claxon, audioClaxon);
+      final map = {...state.relaysMap};
+      map[Relays.claxon] = map[Relays.claxon]!.copyWith(status: !map[Relays.claxon]!.status);
+      emit(state.copyWith(relaysMap: map));
+      toggleRelayRover(map[Relays.claxon]!.relay.toString());
+      _playAudio(map[Relays.claxon]!.status, map[Relays.claxon]!.audio);
     });
     on<DashboardRetroEvent>((event, emit) {
-      emit(state.copyWith(retro: !state.retro));
-      toggleRelayRover(state.relayRetro.toString());
-      _playAudio(state.retro, audioRetro);
+      final map = {...state.relaysMap};
+      map[Relays.retro] = map[Relays.retro]!.copyWith(status: !map[Relays.retro]!.status);
+      emit(state.copyWith(relaysMap: map));
+      toggleRelayRover(map[Relays.retro]!.relay.toString());
+      _playAudio(map[Relays.retro]!.status, map[Relays.retro]!.audio);
     });
     on<DashboardIpRemoteEvent>((event, emit) {
       emit(state.copyWith(ipRemote: event.ipRemote));
