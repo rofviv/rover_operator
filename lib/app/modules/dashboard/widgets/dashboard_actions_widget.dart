@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../bloc/dashboard_bloc.dart';
-import '../utils/sizes_utils.dart';
+import '../utils/relays_data.dart';
 import 'shortcuts_intent.dart';
 
 class DashboardActionsWidget extends StatelessWidget {
@@ -63,7 +63,7 @@ class DashboardActionsWidget extends StatelessWidget {
                           : Tooltip(
                               message: state.errorMessage,
                               child: GestureDetector(
-                                onTap: () => dashboardBloc.getAllDataRover(),
+                                onTap: () => dashboardBloc.getRelayRover(),
                                 child: Icon(
                                   Icons.circle,
                                   color: state.errorMessage.isNotEmpty
@@ -75,11 +75,34 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                       const SizedBox(width: 2),
                       Text(
-                        " ${state.ipRemote}",
+                        " Host: ${state.ipRemote}",
                         style: const TextStyle(color: Colors.white),
                       ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      (state.isLoading)
+                          ? const CupertinoActivityIndicator(
+                              color: Colors.white,
+                            )
+                          : Tooltip(
+                              message: state.errorMessage,
+                              child: GestureDetector(
+                                onTap: () => dashboardBloc.getRelayRover(),
+                                child: Icon(
+                                  Icons.circle,
+                                  color: state.errorMessage.isNotEmpty
+                                      ? Colors.red
+                                      : Colors.green,
+                                  size: 14,
+                                ),
+                              ),
+                            ),
+                      const SizedBox(width: 2),
                       Text(
-                        " | ${DateTime.now().difference(state.lastSync ?? DateTime.now()).inSeconds}s",
+                        " Relay: ${state.roverStatus.ipRelay ?? "-"}",
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -88,7 +111,8 @@ class DashboardActionsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Tooltip(
-                        message: 'Left (ALT + LEFT)',
+                        message: "${state.relaysMap[Relays.leftArrow]!.name} (${state.relaysMap[Relays.leftArrow]!.shortcut})",
+                        // message: "${state.leftArrow.name} (${state.leftArrow.shortcut})",
                         child: GestureDetector(
                           onTap: () =>
                               dashboardBloc.add(DashboardLeftArrowEvent()),
@@ -102,7 +126,7 @@ class DashboardActionsWidget extends StatelessWidget {
                               ),
                               gradient: RadialGradient(
                                 colors: [
-                                  state.leftArrow
+                                  state.relaysMap[Relays.leftArrow]!.status
                                       ? Colors.amberAccent
                                           .withValues(alpha: 0.1)
                                       : Colors.black,
@@ -120,11 +144,11 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: state.leftArrow
+                            child: state.relaysMap[Relays.leftArrow]!.status
                                 ? Center(
                                     child: Image.asset(
                                       'assets/icons/left_arrow.png',
-                                      width: 50,
+                                      width: state.sizeIcon + 20,
                                       color: Colors.grey.shade700,
                                     ),
                                   )
@@ -139,7 +163,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     )
                                 : Image.asset(
                                     'assets/icons/left_arrow.png',
-                                    width: 50,
+                                    width: state.sizeIcon + 20,
                                     color: Colors.grey.shade700,
                                   ),
                           ),
@@ -163,7 +187,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     dashboardBloc.add(DashboardParkingEvent()),
                                 child: Image.asset(
                                   'assets/icons/parking_brake.png',
-                                  width: iconSize,
+                                  width: state.sizeIcon,
                                   color: state.parking
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
@@ -180,7 +204,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                   color: Colors.transparent,
                                   child: Image.asset(
                                     'assets/icons/car_door.png',
-                                    width: iconSize,
+                                    width: state.sizeIcon,
                                     color: state.door
                                         ? Colors.amberAccent
                                         : Colors.grey.shade700,
@@ -196,7 +220,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     dashboardBloc.add(DashboardLightEvent()),
                                 child: Image.asset(
                                   'assets/icons/light.png',
-                                  width: iconSize,
+                                  width: state.sizeIcon,
                                   color: state.light
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
@@ -211,7 +235,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     dashboardBloc.add(DashboardClaxonEvent()),
                                 child: Image.asset(
                                   'assets/icons/volume.png',
-                                  width: iconSize,
+                                  width: state.sizeIcon,
                                   color: state.claxon
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
@@ -226,7 +250,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     dashboardBloc.add(DashboardRetroEvent()),
                                 child: Image.asset(
                                   'assets/icons/R.png',
-                                  width: iconSize,
+                                  width: state.sizeIcon,
                                   color: state.retro
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
@@ -273,7 +297,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ? Center(
                                     child: Image.asset(
                                       'assets/icons/right_arrow.png',
-                                      width: 50,
+                                      width: state.sizeIcon + 20,
                                       color: Colors.grey.shade700,
                                     ),
                                   )
@@ -288,7 +312,7 @@ class DashboardActionsWidget extends StatelessWidget {
                                     )
                                 : Image.asset(
                                     'assets/icons/right_arrow.png',
-                                    width: 50,
+                                    width: state.sizeIcon + 20,
                                     color: Colors.grey.shade700,
                                   ),
                           ),

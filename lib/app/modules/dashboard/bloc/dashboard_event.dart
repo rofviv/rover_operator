@@ -26,8 +26,6 @@ class DashboardClaxonEvent extends DashboardEvent {}
 
 class DashboardRetroEvent extends DashboardEvent {}
 
-class DashboardSyncEvent extends DashboardEvent {}
-
 class DashboardIpRemoteEvent extends DashboardEvent {
   final String ipRemote;
   const DashboardIpRemoteEvent(this.ipRemote);
@@ -41,4 +39,19 @@ class DashboardErrorMessageEvent extends DashboardEvent {
 class DashboardIsLoadingEvent extends DashboardEvent {
   final bool isLoading;
   const DashboardIsLoadingEvent(this.isLoading);
+}
+
+class DashboardSetRoverStatusEvent extends DashboardEvent {
+  final RoverStatusModel roverStatus;
+  const DashboardSetRoverStatusEvent(this.roverStatus);
+}
+
+class DashboardSetRelayEvent extends DashboardEvent {
+  final RelayModel relay;
+  const DashboardSetRelayEvent(this.relay);
+}
+
+class DashboardSetRelaysMapEvent extends DashboardEvent {
+  final Map<Relays, RelayAction> relaysMap;
+  const DashboardSetRelaysMapEvent(this.relaysMap);
 }
