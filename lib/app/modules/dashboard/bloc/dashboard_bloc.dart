@@ -189,11 +189,40 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else {
       syncDataRover();
     }
+    _readRelayNumber();
+  }
+
+  void _readRelayNumber() async {
     final map = {...state.relaysMap};
     final leftArrow =
         await preferencesRepository.getRelay(Relays.leftArrow.toString());
     if (leftArrow != null) {
       map[Relays.leftArrow] = map[Relays.leftArrow]!.copyWith(relay: leftArrow);
+    }
+    final rightArrow =
+        await preferencesRepository.getRelay(Relays.rightArrow.toString());
+    if (rightArrow != null) {
+      map[Relays.rightArrow] = map[Relays.rightArrow]!.copyWith(relay: rightArrow);
+    }
+    final door =
+        await preferencesRepository.getRelay(Relays.door.toString());
+    if (door != null) {
+      map[Relays.door] = map[Relays.door]!.copyWith(relay: door);
+    }
+    final light =
+        await preferencesRepository.getRelay(Relays.light.toString());
+    if (light != null) {
+      map[Relays.light] = map[Relays.light]!.copyWith(relay: light);
+    }
+    final claxon =
+        await preferencesRepository.getRelay(Relays.claxon.toString());
+    if (claxon != null) {
+      map[Relays.claxon] = map[Relays.claxon]!.copyWith(relay: claxon);
+    }
+    final retro =
+        await preferencesRepository.getRelay(Relays.retro.toString());
+    if (retro != null) {
+      map[Relays.retro] = map[Relays.retro]!.copyWith(relay: retro);
     }
     add(DashboardSetRelaysEvent(map));
   }
@@ -244,7 +273,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   Future<void> toggleRelayRover(String relayNumber) async {
     try {
-      // TODO: RELAY NUMBER modificable por el usuario
       add(const DashboardErrorMessageRelayEvent(''));
       final relay =
           await roverRepository.toggleRelayRover(state.ipRemote, relayNumber);
