@@ -1,4 +1,3 @@
-import '../modules/dashboard/utils/relays_data.dart';
 import 'local_storage.dart';
 
 abstract class PreferencesRepository {
