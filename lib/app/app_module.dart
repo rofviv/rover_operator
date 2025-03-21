@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import 'core/local_storage.dart';
+import 'core/preferences_repository.dart';
 import 'modules/modules.dart';
+
 class AppModule extends Module {
   @override
   void exportedBinds(i) {
@@ -12,6 +15,8 @@ class AppModule extends Module {
         ),
       ),
     );
+    i.addSingleton<LocalStorage>(LocalStorageImpl.new);
+    i.addSingleton<PreferencesRepository>(PreferencesRepositoryImpl.new);
   }
 
   @override

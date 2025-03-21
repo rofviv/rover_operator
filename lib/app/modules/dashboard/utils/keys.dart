@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-final ipBaseControler = TextEditingController();
+final ipRemoteControler = TextEditingController();

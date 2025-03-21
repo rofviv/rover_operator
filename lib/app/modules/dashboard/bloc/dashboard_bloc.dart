@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rover_operator/app/modules/dashboard/utils/keys.dart';
 import '../../../core/helpers/audio_helper.dart';
+import '../../../core/preferences_repository.dart';
 import '../data/relay_model.dart';
 import '../data/relay_action.dart';
 import '../data/rover_repository.dart';
@@ -15,9 +16,10 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RoverRepository roverRepository;
+  final PreferencesRepository preferencesRepository;
   Timer? _timer;
 
-  DashboardBloc(this.roverRepository)
+  DashboardBloc(this.roverRepository, this.preferencesRepository)
       : super(
           DashboardState(
             relaysMap: relaysMap,
@@ -25,7 +27,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             relay: RelayModel(),
           ),
         ) {
-    on<DashboardSizeIconEvent>((event, emit) {
+    on<DashboardSizeIconEvent>((event, emit) async {
+      await preferencesRepository.setSizeIcon(event.sizeIcon.toString());
       emit(state.copyWith(sizeIcon: event.sizeIcon));
     });
     on<DashboardLeftArrowEvent>((event, emit) {
@@ -93,34 +96,40 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     on<DashboardDoorEvent>((event, emit) {
       final map = {...state.relaysMap};
-      map[Relays.door] = map[Relays.door]!.copyWith(status: !map[Relays.door]!.status);
+      map[Relays.door] =
+          map[Relays.door]!.copyWith(status: !map[Relays.door]!.status);
       emit(state.copyWith(relaysMap: map));
       toggleRelayRover(map[Relays.door]!.relay.toString());
       _playAudio(map[Relays.door]!.status, map[Relays.door]!.audio);
     });
     on<DashboardLightEvent>((event, emit) {
       final map = {...state.relaysMap};
-      map[Relays.light] = map[Relays.light]!.copyWith(status: !map[Relays.light]!.status);
+      map[Relays.light] =
+          map[Relays.light]!.copyWith(status: !map[Relays.light]!.status);
       emit(state.copyWith(relaysMap: map));
       toggleRelayRover(map[Relays.light]!.relay.toString());
       _playAudio(map[Relays.light]!.status, map[Relays.light]!.audio);
     });
     on<DashboardClaxonEvent>((event, emit) {
       final map = {...state.relaysMap};
-      map[Relays.claxon] = map[Relays.claxon]!.copyWith(status: !map[Relays.claxon]!.status);
+      map[Relays.claxon] =
+          map[Relays.claxon]!.copyWith(status: !map[Relays.claxon]!.status);
       emit(state.copyWith(relaysMap: map));
       toggleRelayRover(map[Relays.claxon]!.relay.toString());
       _playAudio(map[Relays.claxon]!.status, map[Relays.claxon]!.audio);
     });
     on<DashboardRetroEvent>((event, emit) {
       final map = {...state.relaysMap};
-      map[Relays.retro] = map[Relays.retro]!.copyWith(status: !map[Relays.retro]!.status);
+      map[Relays.retro] =
+          map[Relays.retro]!.copyWith(status: !map[Relays.retro]!.status);
       emit(state.copyWith(relaysMap: map));
       toggleRelayRover(map[Relays.retro]!.relay.toString());
       _playAudio(map[Relays.retro]!.status, map[Relays.retro]!.audio);
     });
-    on<DashboardIpRemoteEvent>((event, emit) {
+    on<DashboardIpRemoteEvent>((event, emit) async {
+      await preferencesRepository.setIpRemote(event.ipRemote);
       emit(state.copyWith(ipRemote: event.ipRemote));
+      await Future.delayed(const Duration(milliseconds: 1000));
       syncDataRover();
     });
     on<DashboardErrorMessageHostEvent>((event, emit) {
@@ -162,12 +171,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
       emit(state.copyWith(relaysMap: event.relaysMap));
     });
-    syncDataRover();
     init();
   }
 
-  void init() {
-    ipBaseControler.text = state.ipRemote;
+  void init() async {
+    final ipRemote = await preferencesRepository.ipRemote;
+    final sizeIcon = await preferencesRepository.sizeIcon;
+    if (sizeIcon != null) {
+      add(DashboardSizeIconEvent(double.parse(sizeIcon)));
+    }
+    if (ipRemote != null) {
+      ipRemoteControler.text = ipRemote;
+      add(DashboardIpRemoteEvent(ipRemote));
+    } else {
+      syncDataRover();
+    }
   }
 
   void syncDataRover() {

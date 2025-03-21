@@ -21,12 +21,12 @@ class SettingsScreen extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(controller: ipBaseControler),
+                    child: TextField(controller: ipRemoteControler),
                   ),
                   IconButton(
                     onPressed: () {
                       dashboardBloc
-                          .add(DashboardIpRemoteEvent(ipBaseControler.text));
+                          .add(DashboardIpRemoteEvent(ipRemoteControler.text));
                       Navigator.pop(context);
                     },
                     icon: const Icon(Icons.save),
