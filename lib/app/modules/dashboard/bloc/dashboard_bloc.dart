@@ -171,6 +171,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
       emit(state.copyWith(relaysMap: event.relaysMap));
     });
+    on<DashboardSetRelaysEvent>((event, emit) {
+      emit(state.copyWith(relaysMap: event.relaysMap));
+    });
     init();
   }
 
@@ -186,6 +189,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else {
       syncDataRover();
     }
+    final map = {...state.relaysMap};
+    final leftArrow =
+        await preferencesRepository.getRelay(Relays.leftArrow.toString());
+    if (leftArrow != null) {
+      map[Relays.leftArrow] = map[Relays.leftArrow]!.copyWith(relay: leftArrow);
+    }
+    add(DashboardSetRelaysEvent(map));
+  }
+
+  void setRelays(Relays key, int value) async {
+    await preferencesRepository.setRelays(key.toString(), value);
+    final map = {...state.relaysMap};
+    map[key] = map[key]!.copyWith(relay: value);
+    add(DashboardSetRelaysEvent(map));
   }
 
   void syncDataRover() {

@@ -7,14 +7,14 @@ abstract class PreferencesRepository {
 
   Future<String?> get ipRemote;
   Future<String?> get sizeIcon;
-  Future<Map<Relays, int>?> get relays;
+  Future<int?> getRelay(String key);
 
   Future<void> setToken(String token);
   Future<void> setUserId(String userId);
 
   Future<void> setIpRemote(String ipRemote);
   Future<void> setSizeIcon(String sizeIcon);
-  Future<void> setRelays(Map<Relays, int> relays);
+  Future<void> setRelays(String key, int relayNumber);
 
   Future<void> clearSession();
 }
@@ -27,7 +27,7 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   final String _ipRemoteKey = 'app-ip-remote';
   final String _sizeIconKey = 'app-size-icon';
-  final String _relaysKey = 'app-relays';
+  final String _relaysKey = 'app-relay';
 
   PreferencesRepositoryImpl(this._localStorage);
 
@@ -67,13 +67,15 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
 
   @override
   Future<String?> get sizeIcon => _localStorage.read<String?>(_sizeIconKey);
-
+  
   @override
-  Future<Map<Relays, int>?> get relays =>
-      _localStorage.read<Map<Relays, int>>(_relaysKey);
-
-  @override
-  Future<void> setRelays(Map<Relays, int> relays) async {
-    await _localStorage.create(_relaysKey, relays);
+  Future<int?> getRelay(String key) {
+    return _localStorage.read<int?>(_relaysKey + key);
   }
+  
+  @override
+  Future<void> setRelays(String key, int relayNumber) async {
+    await _localStorage.create(_relaysKey + key, relayNumber);
+  }
+
 }

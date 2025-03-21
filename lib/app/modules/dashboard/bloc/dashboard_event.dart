@@ -65,3 +65,8 @@ class DashboardSetRelaysMapEvent extends DashboardEvent {
   final Map<Relays, RelayAction> relaysMap;
   const DashboardSetRelaysMapEvent(this.relaysMap);
 }
+
+class DashboardSetRelaysEvent extends DashboardEvent {
+  final Map<Relays, RelayAction> relaysMap;
+  const DashboardSetRelaysEvent(this.relaysMap);
+}
