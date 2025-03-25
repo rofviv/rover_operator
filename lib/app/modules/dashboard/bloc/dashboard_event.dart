@@ -70,3 +70,23 @@ class DashboardSetRelaysEvent extends DashboardEvent {
   final Map<Relays, RelayAction> relaysMap;
   const DashboardSetRelaysEvent(this.relaysMap);
 }
+
+class DashboardSetDistanceSonar1Event extends DashboardEvent {
+  final double distanceSonar1;
+  const DashboardSetDistanceSonar1Event(this.distanceSonar1);
+}
+
+class DashboardSetDistanceSonar2Event extends DashboardEvent {
+  final double distanceSonar2;
+  const DashboardSetDistanceSonar2Event(this.distanceSonar2);
+}
+
+class DashboardSetDistanceSonar3Event extends DashboardEvent {
+  final double distanceSonar3;
+  const DashboardSetDistanceSonar3Event(this.distanceSonar3);
+}
+
+class DashboardSetDistanceSonar4Event extends DashboardEvent {
+  final double distanceSonar4;
+  const DashboardSetDistanceSonar4Event(this.distanceSonar4);
+}

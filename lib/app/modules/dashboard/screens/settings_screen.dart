@@ -20,10 +20,18 @@ class SettingsScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(controller: ipRemoteControler),
+                      child: TextField(
+                        controller: ipRemoteControler,
+                        decoration: const InputDecoration(
+                          labelText: 'IP Remote',
+                          hintText: '10.13.13.1',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
                     IconButton(
                       onPressed: () {
@@ -35,10 +43,17 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Size Icon:'),
+                    const Text(
+                      'Size Icon:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Row(
                       children: [
                         IconButton(
@@ -60,188 +75,177 @@ class SettingsScreen extends StatelessWidget {
                     )
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.leftArrow.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.leftArrow,
-                                (state.relaysMap[Relays.leftArrow]?.relay ??
-                                        0) -
-                                    1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.leftArrow]?.relay
-                                .toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.leftArrow,
-                                (state.relaysMap[Relays.leftArrow]?.relay ??
-                                        0) +
-                                    1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text('Action'),
+                    Text('Relay'),
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.leftArrow.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.rightArrow,
-                                (state.relaysMap[Relays.rightArrow]?.relay ??
-                                        0) -
-                                    1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.rightArrow]?.relay
-                                .toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.rightArrow,
-                                (state.relaysMap[Relays.rightArrow]?.relay ??
-                                        0) +
-                                    1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text(
+                      Relays.leftArrow.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.leftArrow]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.leftArrow, value ?? 0);
+                      },
+                    ),
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.door.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(Relays.door,
-                                (state.relaysMap[Relays.door]?.relay ?? 0) - 1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.door]?.relay.toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(Relays.door,
-                                (state.relaysMap[Relays.door]?.relay ?? 0) + 1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text(
+                      Relays.rightArrow.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.rightArrow]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.rightArrow, value ?? 0);
+                      },
+                    ),
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.light.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.light,
-                                (state.relaysMap[Relays.light]?.relay ?? 0) -
-                                    1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.light]?.relay.toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.light,
-                                (state.relaysMap[Relays.light]?.relay ?? 0) +
-                                    1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text(
+                      Relays.door.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.door]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.door, value ?? 0);
+                      },
+                    ),
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.claxon.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.claxon,
-                                (state.relaysMap[Relays.claxon]?.relay ?? 0) -
-                                    1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.claxon]?.relay.toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.claxon,
-                                (state.relaysMap[Relays.claxon]?.relay ?? 0) +
-                                    1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text(
+                      Relays.light.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.light]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.light, value ?? 0);
+                      },
+                    ),
                   ],
                 ),
+                Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Relays.retro.name),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.retro,
-                                (state.relaysMap[Relays.retro]?.relay ?? 0) -
-                                    1);
-                          },
-                          icon: const Icon(Icons.remove),
-                        ),
-                        Text(state.relaysMap[Relays.retro]?.relay.toString() ??
-                            ''),
-                        IconButton(
-                          onPressed: () {
-                            dashboardBloc.setRelays(
-                                Relays.retro,
-                                (state.relaysMap[Relays.retro]?.relay ?? 0) +
-                                    1);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    )
+                    Text(
+                      Relays.claxon.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.claxon]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.claxon, value ?? 0);
+                      },
+                    ),
                   ],
                 ),
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      Relays.retro.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.retro]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.retro, value ?? 0);
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
               ],
             ),
           );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rover_operator/app/modules/dashboard/utils/keys.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../core/helpers/audio_helper.dart';
 import '../../../core/preferences_repository.dart';
 import '../data/relay_model.dart';
@@ -9,6 +10,7 @@ import '../data/relay_action.dart';
 import '../data/rover_repository.dart';
 import '../data/rover_status_mode.dart';
 import '../utils/audio_key.dart';
+import '../utils/beep_controller.dart';
 import '../utils/relays_data.dart';
 
 part 'dashboard_event.dart';
@@ -174,7 +176,20 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetRelaysEvent>((event, emit) {
       emit(state.copyWith(relaysMap: event.relaysMap));
     });
+    on<DashboardSetDistanceSonar1Event>((event, emit) {
+      emit(state.copyWith(distanceSonar1: event.distanceSonar1));
+    });
+    on<DashboardSetDistanceSonar2Event>((event, emit) {
+      emit(state.copyWith(distanceSonar2: event.distanceSonar2));
+    });
+    on<DashboardSetDistanceSonar3Event>((event, emit) {
+      emit(state.copyWith(distanceSonar3: event.distanceSonar3));
+    });
+    on<DashboardSetDistanceSonar4Event>((event, emit) {
+      emit(state.copyWith(distanceSonar4: event.distanceSonar4));
+    });
     init();
+    socket();
   }
 
   void init() async {
@@ -202,15 +217,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final rightArrow =
         await preferencesRepository.getRelay(Relays.rightArrow.toString());
     if (rightArrow != null) {
-      map[Relays.rightArrow] = map[Relays.rightArrow]!.copyWith(relay: rightArrow);
+      map[Relays.rightArrow] =
+          map[Relays.rightArrow]!.copyWith(relay: rightArrow);
     }
-    final door =
-        await preferencesRepository.getRelay(Relays.door.toString());
+    final door = await preferencesRepository.getRelay(Relays.door.toString());
     if (door != null) {
       map[Relays.door] = map[Relays.door]!.copyWith(relay: door);
     }
-    final light =
-        await preferencesRepository.getRelay(Relays.light.toString());
+    final light = await preferencesRepository.getRelay(Relays.light.toString());
     if (light != null) {
       map[Relays.light] = map[Relays.light]!.copyWith(relay: light);
     }
@@ -219,8 +233,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (claxon != null) {
       map[Relays.claxon] = map[Relays.claxon]!.copyWith(relay: claxon);
     }
-    final retro =
-        await preferencesRepository.getRelay(Relays.retro.toString());
+    final retro = await preferencesRepository.getRelay(Relays.retro.toString());
     if (retro != null) {
       map[Relays.retro] = map[Relays.retro]!.copyWith(relay: retro);
     }
@@ -310,7 +323,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
       return map;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -321,5 +333,41 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } else {
       audioHelper.stopAudio();
     }
+  }
+
+  void socket() {
+    IO.Socket socket = IO.io(
+        'http://localhost:5000',
+        IO.OptionBuilder().setTransports(['websocket']) // Usar solo WebSocket
+            .setExtraHeaders({'Origin': '*'}) // Evitar bloqueos por CORS
+            .build());
+    socket.onConnect((_) {
+      print('connect');
+      socket.emit('msg', 'test');
+    });
+    socket.on('sensor_data', (data) {
+      if (data["sensor"].contains("sonar")) {
+        print("sonar---");
+        print(data["distance"]);
+        BeepController().startBeeping(data["distance"].toInt());
+        if (data["sensor"] == "sonar-1") {
+          add(DashboardSetDistanceSonar1Event(data["distance"].toDouble()));
+        } else if (data["sensor"] == "sonar-2") {
+          add(DashboardSetDistanceSonar2Event(data["distance"].toDouble()));
+        } else if (data["sensor"] == "sonar-3") {
+          add(DashboardSetDistanceSonar3Event(data["distance"].toDouble()));
+        } else if (data["sensor"] == "sonar-4") {
+          add(DashboardSetDistanceSonar4Event(data["distance"].toDouble()));
+        }
+
+        
+      }
+      if (data["sensor"] == "lidar") {
+        print("lidar---");
+        print(data["distance"]);
+      }
+    });
+    socket.onDisconnect((_) => print('disconnect'));
+    socket.onError((error) => print(error));
   }
 }

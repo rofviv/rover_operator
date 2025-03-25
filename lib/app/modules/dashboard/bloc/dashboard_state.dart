@@ -11,6 +11,11 @@ class DashboardState extends Equatable {
   final String errorMessageHost;
   final String errorMessageRelay;
 
+  final double distanceSonar1;
+  final double distanceSonar2;
+  final double distanceSonar3;
+  final double distanceSonar4;
+
   final RoverStatusModel roverStatus;
   final RelayModel relay;
 
@@ -26,6 +31,10 @@ class DashboardState extends Equatable {
     this.errorMessageRelay = "",
     required this.roverStatus,
     required this.relay,
+    this.distanceSonar1 = 0,
+    this.distanceSonar2 = 0,
+    this.distanceSonar3 = 0,
+    this.distanceSonar4 = 0,
   });
 
   DashboardState copyWith({
@@ -40,6 +49,10 @@ class DashboardState extends Equatable {
     String? errorMessageRelay,
     RoverStatusModel? roverStatus,
     RelayModel? relay,
+    double? distanceSonar1,
+    double? distanceSonar2,
+    double? distanceSonar3,
+    double? distanceSonar4,
   }) {
     return DashboardState(
       isLoading: isLoading ?? this.isLoading,
@@ -53,6 +66,10 @@ class DashboardState extends Equatable {
       errorMessageRelay: errorMessageRelay ?? this.errorMessageRelay,
       roverStatus: roverStatus ?? this.roverStatus,
       relay: relay ?? this.relay,
+      distanceSonar1: distanceSonar1 ?? this.distanceSonar1,
+      distanceSonar2: distanceSonar2 ?? this.distanceSonar2,
+      distanceSonar3: distanceSonar3 ?? this.distanceSonar3,
+      distanceSonar4: distanceSonar4 ?? this.distanceSonar4,
     );
   }
 
@@ -69,5 +86,9 @@ class DashboardState extends Equatable {
         errorMessageRelay,
         roverStatus,
         relay,
+        distanceSonar1,
+        distanceSonar2,
+        distanceSonar3,
+        distanceSonar4,
       ];
 }
