@@ -39,7 +39,7 @@ Future<void> main() async {
     const size = Size(600, 400);
     appWindow.minSize = minSize;
     appWindow.size = size;
-    appWindow.alignment = Alignment.center;
+    appWindow.alignment = Alignment.topRight;
     appWindow.show();
   });
 }

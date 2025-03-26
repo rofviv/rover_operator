@@ -172,7 +172,7 @@ class DashboardActionsWidget extends StatelessWidget {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 5),
+                            horizontal: 35, vertical: 5),
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(50),
@@ -195,9 +195,10 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 15),
                             Tooltip(
-                              message: "${state.relaysMap[Relays.door]!.name} (${state.relaysMap[Relays.door]!.shortcut})",
+                              message:
+                                  "${state.relaysMap[Relays.door]!.name} (${state.relaysMap[Relays.door]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardDoorEvent()),
@@ -213,9 +214,10 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 15),
                             Tooltip(
-                              message: "${state.relaysMap[Relays.light]!.name} (${state.relaysMap[Relays.light]!.shortcut})",
+                              message:
+                                  "${state.relaysMap[Relays.light]!.name} (${state.relaysMap[Relays.light]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardLightEvent()),
@@ -228,9 +230,10 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 15),
                             Tooltip(
-                              message: "${state.relaysMap[Relays.claxon]!.name} (${state.relaysMap[Relays.claxon]!.shortcut})",
+                              message:
+                                  "${state.relaysMap[Relays.claxon]!.name} (${state.relaysMap[Relays.claxon]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardClaxonEvent()),
@@ -243,9 +246,10 @@ class DashboardActionsWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: 10),
                             Tooltip(
-                              message: "${state.relaysMap[Relays.retro]!.name} (${state.relaysMap[Relays.retro]!.shortcut})",
+                              message:
+                                  "${state.relaysMap[Relays.retro]!.name} (${state.relaysMap[Relays.retro]!.shortcut})",
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardRetroEvent()),
@@ -255,6 +259,48 @@ class DashboardActionsWidget extends StatelessWidget {
                                   color: state.relaysMap[Relays.retro]!.status
                                       ? Colors.amberAccent
                                       : Colors.grey.shade700,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              height: 30,
+                              child: VerticalDivider(
+                                color: Colors.grey.shade700,
+                                thickness: 2,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Tooltip(
+                              message: "Sonar",
+                              child: GestureDetector(
+                                onTap: () {
+                                  dashboardBloc.add(DashboardSetSonarSensorEvent(
+                                      !state.sonarSensor));
+                                },
+                                child: Image.asset(
+                                  'assets/icons/sonar_sensor.png',
+                                  width: state.sizeIcon,
+                                  color: state.sonarSensor
+                                      ? Colors.white
+                                      : Colors.red,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Tooltip(
+                              message: "Latency",
+                              child: GestureDetector(
+                                onTap: () {
+                                  dashboardBloc.add(DashboardSetLatencyEvent(
+                                      !state.latency));
+                                },
+                                child: Image.asset(
+                                  'assets/icons/latency.png',
+                                  width: state.sizeIcon,
+                                  color: state.latency
+                                      ? Colors.white
+                                      : Colors.red,
                                 ),
                               ),
                             ),

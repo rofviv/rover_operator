@@ -199,6 +199,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetCubeStatusEvent>((event, emit) {
       emit(state.copyWith(cubeStatus: event.cubeStatus));
     });
+    on<DashboardSetSonarSensorEvent>((event, emit) {
+      emit(state.copyWith(sonarSensor: event.sonarSensor));
+    });
+    on<DashboardSetLatencyEvent>((event, emit) {
+      emit(state.copyWith(latency: event.latency));
+    });
     init();
     socket();
   }
@@ -358,12 +364,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       add(const DashboardSetSocketConnectedEvent(true));
     });
     socket.on("cube_data", (data) {
-      print(data);
       final cubeStatus = CubeStatusModel.fromJson(data);
       add(DashboardSetCubeStatusEvent(cubeStatus));
     });
     socket.on('sensor_data', (data) {
       if (data["sensor"].contains("sonar")) {
+        if (!state.sonarSensor) return;
+
         if (state.activeSound) {
           BeepController()
               .startBeeping(data["distance"].toInt(), data["sensor"]);

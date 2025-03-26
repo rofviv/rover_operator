@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/dashboard_bloc.dart';
 import 'screens/settings_screen.dart';
 import 'widgets/dashboard_actions_widget.dart';
+import 'widgets/map_widget.dart';
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({super.key, required this.dashboardBloc});
@@ -169,6 +170,8 @@ class DashboardWidget extends StatelessWidget {
                       );
                     },
                   ),
+                  const SizedBox(height: 10),
+                  const MapWidget(),
                   const SizedBox(height: 50),
                 ],
               ),

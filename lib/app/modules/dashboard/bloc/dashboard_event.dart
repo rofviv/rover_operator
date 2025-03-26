@@ -105,3 +105,13 @@ class DashboardSetCubeStatusEvent extends DashboardEvent {
   final CubeStatusModel cubeStatus;
   const DashboardSetCubeStatusEvent(this.cubeStatus);
 }
+
+class DashboardSetSonarSensorEvent extends DashboardEvent {
+  final bool sonarSensor;
+  const DashboardSetSonarSensorEvent(this.sonarSensor);
+}
+
+class DashboardSetLatencyEvent extends DashboardEvent {
+  final bool latency;
+  const DashboardSetLatencyEvent(this.latency);
+}

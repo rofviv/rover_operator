@@ -22,6 +22,9 @@ class DashboardState extends Equatable {
   final CubeStatusModel cubeStatus;
   final bool socketConnected;
 
+  final bool sonarSensor;
+  final bool latency;
+
   const DashboardState({
     this.activeSound = true,
     this.isLoading = false,
@@ -41,6 +44,8 @@ class DashboardState extends Equatable {
     this.distanceSonar2 = 0,
     this.distanceSonar3 = 0,
     this.distanceSonar4 = 0,
+    this.sonarSensor = true,
+    this.latency = true,
   });
 
   DashboardState copyWith({
@@ -62,6 +67,8 @@ class DashboardState extends Equatable {
     double? distanceSonar3,
     double? distanceSonar4,
     bool? socketConnected,
+    bool? sonarSensor,
+    bool? latency,
   }) {
     return DashboardState(
       activeSound: activeSound ?? this.activeSound,
@@ -82,6 +89,8 @@ class DashboardState extends Equatable {
       distanceSonar3: distanceSonar3 ?? this.distanceSonar3,
       distanceSonar4: distanceSonar4 ?? this.distanceSonar4,
       socketConnected: socketConnected ?? this.socketConnected,
+      sonarSensor: sonarSensor ?? this.sonarSensor,
+      latency: latency ?? this.latency,
     );
   }
 
@@ -105,5 +114,7 @@ class DashboardState extends Equatable {
         distanceSonar3,
         distanceSonar4,
         socketConnected,
+        sonarSensor,
+        latency,
       ];
 }
