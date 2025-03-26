@@ -100,3 +100,8 @@ class DashboardSetSocketConnectedEvent extends DashboardEvent {
   final bool socketConnected;
   const DashboardSetSocketConnectedEvent(this.socketConnected);
 }
+
+class DashboardSetCubeStatusEvent extends DashboardEvent {
+  final CubeStatusModel cubeStatus;
+  const DashboardSetCubeStatusEvent(this.cubeStatus);
+}

@@ -19,6 +19,7 @@ class DashboardState extends Equatable {
 
   final RoverStatusModel roverStatus;
   final RelayModel relay;
+  final CubeStatusModel cubeStatus;
   final bool socketConnected;
 
   const DashboardState({
@@ -34,6 +35,7 @@ class DashboardState extends Equatable {
     this.errorMessageRelay = "",
     required this.roverStatus,
     required this.relay,
+    required this.cubeStatus,
     this.socketConnected = false,
     this.distanceSonar1 = 0,
     this.distanceSonar2 = 0,
@@ -54,6 +56,7 @@ class DashboardState extends Equatable {
     String? errorMessageRelay,
     RoverStatusModel? roverStatus,
     RelayModel? relay,
+    CubeStatusModel? cubeStatus,
     double? distanceSonar1,
     double? distanceSonar2,
     double? distanceSonar3,
@@ -73,6 +76,7 @@ class DashboardState extends Equatable {
       errorMessageRelay: errorMessageRelay ?? this.errorMessageRelay,
       roverStatus: roverStatus ?? this.roverStatus,
       relay: relay ?? this.relay,
+      cubeStatus: cubeStatus ?? this.cubeStatus,
       distanceSonar1: distanceSonar1 ?? this.distanceSonar1,
       distanceSonar2: distanceSonar2 ?? this.distanceSonar2,
       distanceSonar3: distanceSonar3 ?? this.distanceSonar3,
@@ -95,6 +99,7 @@ class DashboardState extends Equatable {
         errorMessageRelay,
         roverStatus,
         relay,
+        cubeStatus,
         distanceSonar1,
         distanceSonar2,
         distanceSonar3,

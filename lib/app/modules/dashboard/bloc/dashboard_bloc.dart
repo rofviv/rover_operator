@@ -5,6 +5,7 @@ import 'package:rover_operator/app/modules/dashboard/utils/keys.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../../core/helpers/audio_helper.dart';
 import '../../../core/preferences_repository.dart';
+import '../data/cube_model.dart';
 import '../data/relay_model.dart';
 import '../data/relay_action.dart';
 import '../data/rover_repository.dart';
@@ -27,6 +28,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             relaysMap: relaysMap,
             roverStatus: RoverStatusModel(),
             relay: RelayModel(),
+            cubeStatus: CubeStatusModel(),
           ),
         ) {
     on<DashboardSizeIconEvent>((event, emit) async {
@@ -194,6 +196,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetSocketConnectedEvent>((event, emit) {
       emit(state.copyWith(socketConnected: event.socketConnected));
     });
+    on<DashboardSetCubeStatusEvent>((event, emit) {
+      emit(state.copyWith(cubeStatus: event.cubeStatus));
+    });
     init();
     socket();
   }
@@ -351,6 +356,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             .build());
     socket.onConnect((_) {
       add(const DashboardSetSocketConnectedEvent(true));
+    });
+    socket.on("cube_data", (data) {
+      print(data);
+      final cubeStatus = CubeStatusModel.fromJson(data);
+      add(DashboardSetCubeStatusEvent(cubeStatus));
     });
     socket.on('sensor_data', (data) {
       if (data["sensor"].contains("sonar")) {
