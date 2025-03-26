@@ -7,27 +7,48 @@ class BeepController {
   final AudioPlayer _player = AudioPlayer();
   Timer? _timer;
 
+  String sensor = "";
+  double distance = 0;
+
   factory BeepController() {
     return _instance;
   }
 
   BeepController._internal();
 
-  void startBeeping(int value) {
+  void startBeeping(int value, String sensor) {
+    if (value != 0) {
+      if (distance == 0 || value < distance) {
+        distance = value.toDouble();
+        this.sensor = sensor;
+      }
+      // else {
+      //   if (this.sensor == sensor) {
+      //     distance = 0;
+      //     this.sensor = "";
+      //   }
+      // }
+    } else {
+      distance = 0;
+      this.sensor = "";
+    }
     _timer?.cancel(); // Cancela cualquier beep anterior
 
     double interval = 1;
-    if (value > 40) {
-      interval = 0.5; // 1 segundo
-    } else if (value > 25) {
-      interval = 0.3; // 0.5 segundos
-    } else if (value > 0) {
-      interval = 0.1; // 0.2 segundos
+    if (distance > 60) {
+      interval = 1; // 1 segundo
+    } else if (distance > 40) {
+      interval = 0.5; // 0.5 segundos
+    } else if (distance > 30) {
+      interval = 0.3;
+    } else if (distance > 0) {
+      interval = 0.1;
     } else {
       stopBeeping();
       _timer = null;
       return;
     }
+    _playBeep();
 
     _timer =
         Timer.periodic(Duration(milliseconds: (interval * 1000).toInt()), (_) {
@@ -40,7 +61,9 @@ class BeepController {
   }
 
   Future<void> _playBeep() async {
-    await _player.play(AssetSource(
-        'sounds/beep.mp3')); // Asegúrate de tener un archivo beep.mp3 en assets
+    if (_player.source == null) {
+      await _player.setSource(AssetSource('sounds/beep.mp3'));
+    }
+    _player.resume();
   }
 }

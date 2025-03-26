@@ -1,6 +1,7 @@
 part of 'dashboard_bloc.dart';
 
 class DashboardState extends Equatable {
+  final bool activeSound;
   final bool isLoading;
   final bool isLoadingRelay;
   final String ipRemote;
@@ -18,8 +19,10 @@ class DashboardState extends Equatable {
 
   final RoverStatusModel roverStatus;
   final RelayModel relay;
+  final bool socketConnected;
 
   const DashboardState({
+    this.activeSound = true,
     this.isLoading = false,
     this.isLoadingRelay = false,
     this.ipRemote = '10.13.13.x',
@@ -31,6 +34,7 @@ class DashboardState extends Equatable {
     this.errorMessageRelay = "",
     required this.roverStatus,
     required this.relay,
+    this.socketConnected = false,
     this.distanceSonar1 = 0,
     this.distanceSonar2 = 0,
     this.distanceSonar3 = 0,
@@ -38,6 +42,7 @@ class DashboardState extends Equatable {
   });
 
   DashboardState copyWith({
+    bool? activeSound,
     bool? isLoading,
     bool? isLoadingRelay,
     String? ipRemote,
@@ -53,8 +58,10 @@ class DashboardState extends Equatable {
     double? distanceSonar2,
     double? distanceSonar3,
     double? distanceSonar4,
+    bool? socketConnected,
   }) {
     return DashboardState(
+      activeSound: activeSound ?? this.activeSound,
       isLoading: isLoading ?? this.isLoading,
       isLoadingRelay: isLoadingRelay ?? this.isLoadingRelay,
       ipRemote: ipRemote ?? this.ipRemote,
@@ -70,11 +77,13 @@ class DashboardState extends Equatable {
       distanceSonar2: distanceSonar2 ?? this.distanceSonar2,
       distanceSonar3: distanceSonar3 ?? this.distanceSonar3,
       distanceSonar4: distanceSonar4 ?? this.distanceSonar4,
+      socketConnected: socketConnected ?? this.socketConnected,
     );
   }
 
   @override
   List<Object?> get props => [
+        activeSound,
         isLoading,
         isLoadingRelay,
         ipRemote,
@@ -90,5 +99,6 @@ class DashboardState extends Equatable {
         distanceSonar2,
         distanceSonar3,
         distanceSonar4,
+        socketConnected,
       ];
 }

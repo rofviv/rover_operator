@@ -188,6 +188,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetDistanceSonar4Event>((event, emit) {
       emit(state.copyWith(distanceSonar4: event.distanceSonar4));
     });
+    on<DashboardSetActiveSoundEvent>((event, emit) {
+      emit(state.copyWith(activeSound: event.activeSound));
+    });
+    on<DashboardSetSocketConnectedEvent>((event, emit) {
+      emit(state.copyWith(socketConnected: event.socketConnected));
+    });
     init();
     socket();
   }
@@ -328,10 +334,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   void _playAudio(bool isActive, AudioHelper audioHelper) {
-    if (isActive) {
-      audioHelper.playAudio();
-    } else {
-      audioHelper.stopAudio();
+    if (state.activeSound) {
+      if (isActive) {
+        audioHelper.playAudio();
+      } else {
+        audioHelper.stopAudio();
+      }
     }
   }
 
@@ -342,14 +350,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             .setExtraHeaders({'Origin': '*'}) // Evitar bloqueos por CORS
             .build());
     socket.onConnect((_) {
-      print('connect');
-      socket.emit('msg', 'test');
+      add(const DashboardSetSocketConnectedEvent(true));
     });
     socket.on('sensor_data', (data) {
       if (data["sensor"].contains("sonar")) {
-        print("sonar---");
-        print(data["distance"]);
-        BeepController().startBeeping(data["distance"].toInt());
+        if (state.activeSound) {
+          BeepController()
+              .startBeeping(data["distance"].toInt(), data["sensor"]);
+        }
         if (data["sensor"] == "sonar-1") {
           add(DashboardSetDistanceSonar1Event(data["distance"].toDouble()));
         } else if (data["sensor"] == "sonar-2") {
@@ -359,15 +367,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         } else if (data["sensor"] == "sonar-4") {
           add(DashboardSetDistanceSonar4Event(data["distance"].toDouble()));
         }
-
-        
       }
       if (data["sensor"] == "lidar") {
-        print("lidar---");
-        print(data["distance"]);
+        // TODO: Implementar el lidar
       }
     });
-    socket.onDisconnect((_) => print('disconnect'));
-    socket.onError((error) => print(error));
+    socket.onDisconnect((_) => add(const DashboardSetSocketConnectedEvent(false)));
+    socket.onError((error) => add(const DashboardSetSocketConnectedEvent(false)));
   }
 }

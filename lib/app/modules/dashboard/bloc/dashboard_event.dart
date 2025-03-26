@@ -90,3 +90,13 @@ class DashboardSetDistanceSonar4Event extends DashboardEvent {
   final double distanceSonar4;
   const DashboardSetDistanceSonar4Event(this.distanceSonar4);
 }
+
+class DashboardSetActiveSoundEvent extends DashboardEvent {
+  final bool activeSound;
+  const DashboardSetActiveSoundEvent(this.activeSound);
+}
+
+class DashboardSetSocketConnectedEvent extends DashboardEvent {
+  final bool socketConnected;
+  const DashboardSetSocketConnectedEvent(this.socketConnected);
+}

@@ -46,6 +46,26 @@ class DashboardWidget extends StatelessWidget {
                               icon: const Icon(Icons.settings),
                             ),
                           ),
+                          BlocBuilder<DashboardBloc, DashboardState>(
+                            bloc: dashboardBloc,
+                            builder: (context, state) {
+                              return Tooltip(
+                                message: state.activeSound
+                                    ? 'Disable sound'
+                                    : 'Enable sound',
+                                child: IconButton(
+                                  onPressed: () {
+                                    dashboardBloc.add(
+                                        DashboardSetActiveSoundEvent(
+                                            !dashboardBloc.state.activeSound));
+                                  },
+                                  icon: Icon(state.activeSound
+                                      ? Icons.volume_up
+                                      : Icons.volume_off_outlined),
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     )),
@@ -62,8 +82,14 @@ class DashboardWidget extends StatelessWidget {
               builder: (context, state) {
                 return Stack(
                   children: [
-                    Image.asset("assets/icons/patioRobot.png",
-                        width: 350, height: 350),
+                    Image.asset(
+                      "assets/icons/patioRobot.png",
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.cover,
+                      color:
+                          state.socketConnected ? null : Colors.grey.shade800,
+                    ),
                     if (state.distanceSonar1 > 0)
                       Positioned(
                         left: 0,
