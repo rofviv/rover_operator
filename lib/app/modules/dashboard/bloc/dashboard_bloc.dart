@@ -199,11 +199,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetCubeStatusEvent>((event, emit) {
       emit(state.copyWith(cubeStatus: event.cubeStatus));
     });
-    on<DashboardSetSonarSensorEvent>((event, emit) {
+    on<DashboardSetSonarSensorEvent>((event, emit) async {
       emit(state.copyWith(sonarSensor: event.sonarSensor));
+      await roverRepository.setSonarFrontSensor(state.ipRemote, event.sonarSensor);
     });
-    on<DashboardSetLatencyEvent>((event, emit) {
+    on<DashboardSetLatencyEvent>((event, emit) async {
       emit(state.copyWith(latency: event.latency));
+      await roverRepository.setLatency(state.ipRemote, event.latency);
     });
     init();
     socket();

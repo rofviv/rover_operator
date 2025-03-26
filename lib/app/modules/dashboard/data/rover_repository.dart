@@ -7,6 +7,8 @@ abstract class RoverRepository {
   Future<RoverStatusModel> getStatusRover(String baseUrl);
   Future<RelayModel> getRelayRover(String baseUrl);
   Future<RelayModel> toggleRelayRover(String baseUrl, String relayNumber);
+  Future<RoverStatusModel> setSonarFrontSensor(String baseUrl, bool sonarSensor);
+  Future<RoverStatusModel> setLatency(String baseUrl, bool latency);
 }
 
 class RoverRepositoryImpl implements RoverRepository {
@@ -43,6 +45,36 @@ class RoverRepositoryImpl implements RoverRepository {
         },
       );
       return RelayModel.fromMap(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  
+  @override
+  Future<RoverStatusModel> setLatency(String baseUrl, bool latency) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_latency_status',
+        data: {
+          'latency_status': latency ? "1" : "0",
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<RoverStatusModel> setSonarFrontSensor(String baseUrl, bool sonarSensor) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_sonar_front_status',
+        data: {
+          'sonar_front_status': sonarSensor ? "1" : "0",
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
     } catch (e) {
       throw Exception(e);
     }
