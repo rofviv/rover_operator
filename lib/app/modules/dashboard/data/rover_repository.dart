@@ -7,8 +7,11 @@ abstract class RoverRepository {
   Future<RoverStatusModel> getStatusRover(String baseUrl);
   Future<RelayModel> getRelayRover(String baseUrl);
   Future<RelayModel> toggleRelayRover(String baseUrl, String relayNumber);
-  Future<RoverStatusModel> setSonarFrontSensor(String baseUrl, bool sonarSensor);
+  Future<RoverStatusModel> setSonarFrontSensor(
+      String baseUrl, bool sonarSensor);
+  Future<RoverStatusModel> setSonarBackSensor(String baseUrl, bool sonarSensor);
   Future<RoverStatusModel> setLatency(String baseUrl, bool latency);
+  Future<RoverStatusModel> setLidar(String baseUrl, bool lidar);
 }
 
 class RoverRepositoryImpl implements RoverRepository {
@@ -49,7 +52,7 @@ class RoverRepositoryImpl implements RoverRepository {
       throw Exception(e);
     }
   }
-  
+
   @override
   Future<RoverStatusModel> setLatency(String baseUrl, bool latency) async {
     try {
@@ -66,12 +69,44 @@ class RoverRepositoryImpl implements RoverRepository {
   }
 
   @override
-  Future<RoverStatusModel> setSonarFrontSensor(String baseUrl, bool sonarSensor) async {
+  Future<RoverStatusModel> setSonarFrontSensor(
+      String baseUrl, bool sonarSensor) async {
     try {
       final response = await dio.post(
         'http://$baseUrl/set_sonar_front_status',
         data: {
           'sonar_front_status': sonarSensor ? "1" : "0",
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<RoverStatusModel> setSonarBackSensor(
+      String baseUrl, bool sonarSensor) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_sonar_back_status',
+        data: {
+          'sonar_back_status': sonarSensor ? "1" : "0",
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<RoverStatusModel> setLidar(String baseUrl, bool lidar) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_lidar_status',
+        data: {
+          'lidar_status': lidar ? "1" : "0",
         },
       );
       return RoverStatusModel.fromJson(response.data);

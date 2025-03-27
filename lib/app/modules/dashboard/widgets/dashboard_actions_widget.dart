@@ -53,6 +53,15 @@ class DashboardActionsWidget extends StatelessWidget {
               },
               child: Column(
                 children: [
+                  if (state.roverStatus.latencyStatus == "1")
+                    Text(
+                      "Ping: ${state.currentLatencyPing} ms.",
+                      style: TextStyle(
+                        color: state.currentLatencyAlert
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -272,16 +281,52 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Tooltip(
-                              message: "Sonar",
+                              message:
+                                  "Sonar front (DISTANCE: ${state.roverStatus.sonarFrontDistance} cm.)",
                               child: GestureDetector(
                                 onTap: () {
-                                  dashboardBloc.add(DashboardSetSonarSensorEvent(
-                                      !state.sonarSensor));
+                                  dashboardBloc.setSonarFrontSensor();
                                 },
                                 child: Image.asset(
                                   'assets/icons/sonar_sensor.png',
+                                  width: state.sizeIcon - 7,
+                                  color:
+                                      state.roverStatus.sonarFrontStatus == "1"
+                                          ? Colors.white
+                                          : Colors.red,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Tooltip(
+                              message:
+                                  "Sonar back (DISTANCE: ${state.roverStatus.sonarBackDistance} cm.)",
+                              child: GestureDetector(
+                                onTap: () {
+                                  dashboardBloc.setSonarBackSensor();
+                                },
+                                child: Image.asset(
+                                  'assets/icons/sonar_sensor_back.png',
+                                  width: state.sizeIcon - 7,
+                                  color:
+                                      state.roverStatus.sonarBackStatus == "1"
+                                          ? Colors.white
+                                          : Colors.red,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Tooltip(
+                              message:
+                                  "Latency (Max: ${state.roverStatus.latencyTime} ms.)",
+                              child: GestureDetector(
+                                onTap: () {
+                                  dashboardBloc.setLatency();
+                                },
+                                child: Image.asset(
+                                  'assets/icons/latency.png',
                                   width: state.sizeIcon,
-                                  color: state.sonarSensor
+                                  color: state.roverStatus.latencyStatus == "1"
                                       ? Colors.white
                                       : Colors.red,
                                 ),
@@ -289,16 +334,16 @@ class DashboardActionsWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 10),
                             Tooltip(
-                              message: "Latency",
+                              message:
+                                  "Lidar (DISTANCE: ${state.roverStatus.lidarDistance} cm. ANGLE: ${state.roverStatus.lidarAngle}°)",
                               child: GestureDetector(
                                 onTap: () {
-                                  dashboardBloc.add(DashboardSetLatencyEvent(
-                                      !state.latency));
+                                  dashboardBloc.setLidar();
                                 },
                                 child: Image.asset(
-                                  'assets/icons/latency.png',
-                                  width: state.sizeIcon,
-                                  color: state.latency
+                                  'assets/icons/lidar.png',
+                                  width: state.sizeIcon - 7,
+                                  color: state.roverStatus.lidarStatus == "1"
                                       ? Colors.white
                                       : Colors.red,
                                 ),

@@ -199,13 +199,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardSetCubeStatusEvent>((event, emit) {
       emit(state.copyWith(cubeStatus: event.cubeStatus));
     });
-    on<DashboardSetSonarSensorEvent>((event, emit) async {
-      emit(state.copyWith(sonarSensor: event.sonarSensor));
-      await roverRepository.setSonarFrontSensor(state.ipRemote, event.sonarSensor);
-    });
-    on<DashboardSetLatencyEvent>((event, emit) async {
-      emit(state.copyWith(latency: event.latency));
-      await roverRepository.setLatency(state.ipRemote, event.latency);
+    on<DashboardSetLatencyEvent>((event, emit) {
+      emit(state.copyWith(
+          currentLatencyPing: event.latencyPing,
+          currentLatencyAlert: event.latencyAlert));
     });
     init();
     socket();
@@ -356,14 +353,52 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
+  void setSonarFrontSensor() async {
+    bool sonarSensor = state.roverStatus.sonarFrontStatus == "1" ? false : true;
+    final res =
+        await roverRepository.setSonarFrontSensor(state.ipRemote, sonarSensor);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(sonarFrontStatus: res.sonarFrontStatus)));
+  }
+
+  void setSonarBackSensor() async {
+    bool sonarSensor = state.roverStatus.sonarBackStatus == "1" ? false : true;
+    final res =
+        await roverRepository.setSonarBackSensor(state.ipRemote, sonarSensor);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(sonarBackStatus: res.sonarBackStatus)));
+  }
+
+  void setLatency() async {
+    bool latency = state.roverStatus.latencyStatus == "1" ? false : true;
+    final res = await roverRepository.setLatency(state.ipRemote, latency);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(latencyStatus: res.latencyStatus)));
+  }
+
+  void setLidar() async {
+    bool lidar = state.roverStatus.lidarStatus == "1" ? false : true;
+    final res = await roverRepository.setLidar(state.ipRemote, lidar);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(lidarStatus: res.lidarStatus)));
+  }
+
   void socket() {
     IO.Socket socket = IO.io(
-        'http://localhost:5000',
-        IO.OptionBuilder().setTransports(['websocket']) // Usar solo WebSocket
-            .setExtraHeaders({'Origin': '*'}) // Evitar bloqueos por CORS
-            .build());
+      'http://localhost:5000',
+      IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
+          {'Origin': '*'}).build(),
+    );
     socket.onConnect((_) {
       add(const DashboardSetSocketConnectedEvent(true));
+    });
+    socket.on("latency", (data) {
+      final latencyPing = data["ping_time"]?.toDouble();
+      final latencyAlert = data["alert"] as bool;
+      add(DashboardSetLatencyEvent(latencyPing, latencyAlert));
+      if (latencyAlert) {
+        // TODO: Implement sound alert
+      }
     });
     socket.on("cube_data", (data) {
       final cubeStatus = CubeStatusModel.fromJson(data);
@@ -371,7 +406,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     socket.on('sensor_data', (data) {
       if (data["sensor"].contains("sonar")) {
-        if (!state.sonarSensor) return;
+        if (state.roverStatus.sonarFrontStatus == null ||
+            state.roverStatus.sonarFrontStatus == "0") {
+          return;
+        }
 
         if (state.activeSound) {
           BeepController()
@@ -391,7 +429,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         // TODO: Implementar el lidar
       }
     });
-    socket.onDisconnect((_) => add(const DashboardSetSocketConnectedEvent(false)));
-    socket.onError((error) => add(const DashboardSetSocketConnectedEvent(false)));
+    socket.onDisconnect(
+        (_) => add(const DashboardSetSocketConnectedEvent(false)));
+    socket
+        .onError((error) => add(const DashboardSetSocketConnectedEvent(false)));
   }
 }

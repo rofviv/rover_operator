@@ -11,7 +11,7 @@ class MapWidget extends StatelessWidget {
       height: 500,
       width: MediaQuery.of(context).size.width,
       child: FlutterMap(
-        options: MapOptions(
+        options: const MapOptions(
           initialCenter: LatLng(
             -17.798262949722087,
             -63.177556347059166,
