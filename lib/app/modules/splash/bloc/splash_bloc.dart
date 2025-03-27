@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../modules/dashboard/dashboard_module.dart';
+import '../../dashboard/dashboard_module.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';

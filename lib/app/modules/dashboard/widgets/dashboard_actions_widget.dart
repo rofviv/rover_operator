@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-import '../bloc/dashboard_bloc.dart';
+import '../blocs/dashboard/dashboard_bloc.dart';
 import '../utils/relays_data.dart';
 import 'shortcuts_intent.dart';
 

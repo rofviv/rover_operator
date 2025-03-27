@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rover_operator/app/modules/dashboard/utils/keys.dart';
 
-import '../bloc/dashboard_bloc.dart';
+import '../blocs/dashboard/dashboard_bloc.dart';
 import '../utils/relays_data.dart';
 
 class SettingsScreen extends StatelessWidget {

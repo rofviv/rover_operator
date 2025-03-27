@@ -2,7 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/dashboard_bloc.dart';
+import 'blocs/dashboard/dashboard_bloc.dart';
 import 'screens/settings_screen.dart';
 import 'widgets/dashboard_actions_widget.dart';
 import 'widgets/map_widget.dart';

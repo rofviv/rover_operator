@@ -2,7 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../app_module.dart';
 import 'dashboard_widget.dart';
-import 'bloc/dashboard_bloc.dart';
+import 'blocs/dashboard/dashboard_bloc.dart';
 import 'data/rover_repository.dart';
 
 class DashboardModule extends Module {

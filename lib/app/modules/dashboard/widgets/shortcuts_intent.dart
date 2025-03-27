@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../bloc/dashboard_bloc.dart';
+import '../blocs/dashboard/dashboard_bloc.dart';
 
 // Intents
 
