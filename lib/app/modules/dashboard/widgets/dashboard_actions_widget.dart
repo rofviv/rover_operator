@@ -23,7 +23,7 @@ class DashboardActionsWidget extends StatelessWidget {
       bloc: dashboardBloc,
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
           child: Actions(
             actions: <Type, Action<Intent>>{
               LeftArrowIntent: LeftArrowAction(dashboardBloc: dashboardBloc),
@@ -53,15 +53,7 @@ class DashboardActionsWidget extends StatelessWidget {
               },
               child: Column(
                 children: [
-                  if (state.roverStatus.latencyStatus == "1")
-                    Text(
-                      "Ping: ${state.currentLatencyPing} ms.",
-                      style: TextStyle(
-                        color: state.currentLatencyAlert
-                            ? Colors.red
-                            : Colors.white,
-                      ),
-                    ),
+                  // TODO: USER PATIO BOT
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -1,18 +1,21 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rover_operator/app/modules/dashboard/utils/keys.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
+
 import '../../../../core/helpers/audio_helper.dart';
 import '../../../../core/preferences_repository.dart';
 import '../../data/cube_model.dart';
-import '../../data/relay_model.dart';
 import '../../data/relay_action.dart';
+import '../../data/relay_model.dart';
 import '../../data/rover_repository.dart';
 import '../../data/rover_status_mode.dart';
 import '../../utils/audio_key.dart';
 import '../../utils/beep_controller.dart';
+import '../../utils/keys.dart';
 import '../../utils/relays_data.dart';
+import '../location/location_bloc.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
@@ -20,9 +23,10 @@ part 'dashboard_state.dart';
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RoverRepository roverRepository;
   final PreferencesRepository preferencesRepository;
+  final LocationBloc locationBloc;
   Timer? _timer;
 
-  DashboardBloc(this.roverRepository, this.preferencesRepository)
+  DashboardBloc(this.roverRepository, this.preferencesRepository, this.locationBloc)
       : super(
           DashboardState(
             relaysMap: relaysMap,
@@ -198,6 +202,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     on<DashboardSetCubeStatusEvent>((event, emit) {
       emit(state.copyWith(cubeStatus: event.cubeStatus));
+      locationBloc.add(LocationUpdateSetEvent(latitude: event.cubeStatus.lat ?? 0, longitude: event.cubeStatus.lon ?? 0,  bearing: event.cubeStatus.yaw));
     });
     on<DashboardSetLatencyEvent>((event, emit) {
       emit(state.copyWith(
@@ -384,9 +389,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   void socket() {
-    IO.Socket socket = IO.io(
+    io.Socket socket = io.io(
       'http://localhost:5000',
-      IO.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
+      io.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
           {'Origin': '*'}).build(),
     );
     socket.onConnect((_) {
