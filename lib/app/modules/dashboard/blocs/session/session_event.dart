@@ -20,3 +20,9 @@ class OnLoadingLoginEvent extends SessionEvent {
 
   const OnLoadingLoginEvent(this.isLoading);
 }
+
+class OnSetOrdersEvent extends SessionEvent {
+  final List<Order> orders;
+
+  const OnSetOrdersEvent(this.orders);
+}

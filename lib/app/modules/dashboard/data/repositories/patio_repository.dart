@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:rover_operator/app/core/preferences_repository.dart';
+import 'package:rover_operator/app/modules/dashboard/data/dtos/fetch_orders_dto.dart';
 
 import '../dtos/login_dto.dart';
+import '../models/order_model.dart';
 import '../models/user_model.dart';
 
 abstract class PatioRepository {
   Future<UserModel> login(LoginDto dto);
   Future<UserModel?> getUserByToken();
+  Future<List<Order>> getOrdersByDriver(FetchOrdersDto dto);
 }
 
 class PatioRepositoryImpl implements PatioRepository {
@@ -45,6 +48,28 @@ class PatioRepositoryImpl implements PatioRepository {
         ),
       );
       return UserModel.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<List<Order>> getOrdersByDriver(FetchOrdersDto dto) async {
+    final token = await _preferencesRepository.token;
+    if (token == null) {
+      return [];
+    }
+    try {
+      final response = await _dio.get(
+        '/api/driver-order/orders/driver',
+        queryParameters: dto.toMap(),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      return Order.fromList(response.data['data'] as List<dynamic>);
     } catch (e) {
       throw Exception(e);
     }

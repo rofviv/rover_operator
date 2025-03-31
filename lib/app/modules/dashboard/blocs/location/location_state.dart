@@ -9,7 +9,7 @@ class LocationState extends Equatable {
 
   const LocationState({
     required this.center,
-    this.zoom = 16,
+    this.zoom = 17,
     this.bearing = 0,
     this.rotateMap = true,
     this.isDragging = false,
