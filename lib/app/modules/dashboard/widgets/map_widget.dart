@@ -4,12 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/location/location_bloc.dart';
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({super.key, required this.locationBloc});
+  const MapWidget(
+      {super.key, required this.locationBloc, required this.dashboardBloc});
 
   final LocationBloc locationBloc;
+  final DashboardBloc dashboardBloc;
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -42,17 +45,25 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         ),
-        BlocBuilder<LocationBloc, LocationState>(
-          bloc: widget.locationBloc,
-          builder: (context, state) {
-            return MarkerLayer(
-              markers: [
-                buildPin(
-                  context,
-                  state.center,
-                  state.bearing,
-                ),
-              ],
+        BlocBuilder<DashboardBloc, DashboardState>(
+          bloc: widget.dashboardBloc,
+          builder: (context, stateDashboard) {
+            return BlocBuilder<LocationBloc, LocationState>(
+              bloc: widget.locationBloc,
+              builder: (context, state) {
+                if (!stateDashboard.socketConnected) {
+                  return const SizedBox();
+                }
+                return MarkerLayer(
+                  markers: [
+                    buildPin(
+                      context,
+                      state.center,
+                      state.bearing,
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),

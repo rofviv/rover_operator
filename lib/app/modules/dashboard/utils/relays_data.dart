@@ -1,5 +1,5 @@
 import '../../../core/helpers/audio_helper.dart';
-import '../data/relay_action.dart';
+import '../data/models/relay_action.dart';
 
 enum Relays {
   leftArrow,

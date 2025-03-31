@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'relay_model.dart';
-import 'rover_status_mode.dart';
+import '../models/relay_model.dart';
+import '../models/rover_status_mode.dart';
 
 abstract class RoverRepository {
   Future<RoverStatusModel> getStatusRover(String baseUrl);

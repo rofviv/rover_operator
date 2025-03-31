@@ -6,11 +6,11 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../../core/helpers/audio_helper.dart';
 import '../../../../core/preferences_repository.dart';
-import '../../data/cube_model.dart';
-import '../../data/relay_action.dart';
-import '../../data/relay_model.dart';
-import '../../data/rover_repository.dart';
-import '../../data/rover_status_mode.dart';
+import '../../data/models/cube_model.dart';
+import '../../data/models/relay_action.dart';
+import '../../data/models/relay_model.dart';
+import '../../data/repositories/rover_repository.dart';
+import '../../data/models/rover_status_mode.dart';
 import '../../utils/audio_key.dart';
 import '../../utils/beep_controller.dart';
 import '../../utils/keys.dart';

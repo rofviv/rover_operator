@@ -53,7 +53,6 @@ class DashboardActionsWidget extends StatelessWidget {
               },
               child: Column(
                 children: [
-                  // TODO: USER PATIO BOT
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
