@@ -5,12 +5,14 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:rover_operator/app/modules/dashboard/widgets/title_bar_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'blocs/dashboard/dashboard_bloc.dart';
 import 'blocs/location/location_bloc.dart';
 import 'blocs/session/session_bloc.dart';
 import 'screens/settings_screen.dart';
 import 'utils/form_keys.dart';
+import 'utils/payment_type.dart';
 import 'widgets/dashboard_actions_widget.dart';
 import 'widgets/map_widget.dart';
 
@@ -277,6 +279,7 @@ class DashboardWidget extends StatelessWidget {
                             child: MapWidget(
                               locationBloc: locationBloc,
                               dashboardBloc: dashboardBloc,
+                              sessionBloc: sessionBloc,
                             ),
                           ),
                           if (state.distanceSonar1 > 0)
@@ -381,6 +384,187 @@ class DashboardWidget extends StatelessWidget {
                                     duration: 1000.milliseconds,
                                   ),
                             ),
+                        ],
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                  const SizedBox(width: 15),
+                  BlocBuilder<SessionBloc, SessionState>(
+                    bloc: sessionBloc,
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Total Orders: ${state.orders.length}",
+                                  style: const TextStyle(color: Colors.white)),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              !state.isLoadingOrders
+                                  ? IconButton(
+                                      icon: const Icon(
+                                        Icons.refresh,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        sessionBloc.getOrdersByDriver();
+                                      },
+                                    )
+                                  : IconButton(
+                                      icon: const Icon(
+                                        Icons.refresh,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        //
+                                      },
+                                    )
+                                      .animate(
+                                        onPlay: (controller) =>
+                                            controller.repeat(),
+                                      )
+                                      .rotate(
+                                        delay: 200.milliseconds,
+                                      ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 15),
+                                ...state.orders.map(
+                                  (order) => GestureDetector(
+                                    onTap: () {
+                                      if (order.status.contains("pending") ||
+                                          order.status.contains("assigned") ||
+                                          order.status.contains("arrived")) {
+                                        locationBloc.goTo(order.fromLatitude,
+                                            order.fromLongitude);
+                                      } else {
+                                        locationBloc.goTo(order.toLatitude,
+                                            order.toLongitude);
+                                      }
+                                    },
+                                    onSecondaryTap: () {
+                                      if (order.status.contains("pending") ||
+                                          order.status.contains("assigned") ||
+                                          order.status.contains("arrived")) {
+                                        locationBloc.goTo(order.toLatitude,
+                                            order.toLongitude);
+                                      } else {
+                                        locationBloc.goTo(order.fromLatitude,
+                                            order.fromLongitude);
+                                      }
+                                    },
+                                    child: Container(
+                                      width: 250,
+                                      margin: const EdgeInsets.only(right: 15),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black,
+                                            blurRadius: 10,
+                                            offset: Offset(0, 10),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SelectableText(
+                                                  "ID: #${order.id.toString()}"),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(11),
+                                                decoration: BoxDecoration(
+                                                  color: order.color,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text("Name: ${order.nameUser}"),
+                                          Text("Phone: ${order.phoneUser}"),
+                                          const Divider(),
+                                          Text("From: ${order.merchantName}"),
+                                          Text("${order.fromAddress}"),
+                                          const Divider(),
+                                          Text("To: ${order.toAddress}"),
+                                          const Divider(),
+                                          TextButton(
+                                            onPressed: () async {
+                                              if (order.urlImageReference !=
+                                                  null) {
+                                                await launchUrl(
+                                                  Uri.parse(
+                                                    order.urlImageReference!,
+                                                  ),
+                                                  mode: LaunchMode
+                                                      .externalApplication,
+                                                );
+                                              } else {
+                                                //
+                                              }
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text("Details"),
+                                                SizedBox(width: 5),
+                                                Icon(Icons.exit_to_app),
+                                              ],
+                                            ),
+                                          ),
+                                          const Divider(),
+                                          Text(
+                                              "Payment type: ${paymentNameById(order.paymentModeId)}"),
+                                          Text("Subtotal: ${order.total}"),
+                                          Text(
+                                              "Delivery cost: ${order.baseCost}"),
+                                          Text(
+                                              "Fee merchat: ${order.feeMerchant}"),
+                                          Text(
+                                              "Total: ${order.total + order.baseCost + order.feeMerchant}"),
+                                          const Divider(),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("Status: ${order.status}"),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                  foregroundColor: Colors.white,
+                                                ),
+                                                onPressed: () {},
+                                                child: const Text("Accept"),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       );
                     },

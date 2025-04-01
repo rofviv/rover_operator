@@ -6,13 +6,18 @@ import 'package:latlong2/latlong.dart';
 
 import '../blocs/dashboard/dashboard_bloc.dart';
 import '../blocs/location/location_bloc.dart';
+import '../blocs/session/session_bloc.dart';
 
 class MapWidget extends StatefulWidget {
   const MapWidget(
-      {super.key, required this.locationBloc, required this.dashboardBloc});
+      {super.key,
+      required this.locationBloc,
+      required this.dashboardBloc,
+      required this.sessionBloc});
 
   final LocationBloc locationBloc;
   final DashboardBloc dashboardBloc;
+  final SessionBloc sessionBloc;
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -56,7 +61,7 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                 }
                 return MarkerLayer(
                   markers: [
-                    buildPin(
+                    buildMarkerMaster(
                       context,
                       state.center,
                       state.bearing,
@@ -64,6 +69,62 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                   ],
                 );
               },
+            );
+          },
+        ),
+        BlocBuilder<SessionBloc, SessionState>(
+          bloc: widget.sessionBloc,
+          builder: (context, state) {
+            return MarkerLayer(
+              markers: [
+                ...state.orders.map(
+                  (order) => Marker(
+                    point: LatLng(order.fromLatitude, order.fromLongitude),
+                    child: Tooltip(
+                      message:
+                          "#${order.id.toString()} | ${order.merchantName}",
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: order.color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.store,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        BlocBuilder<SessionBloc, SessionState>(
+          bloc: widget.sessionBloc,
+          builder: (context, state) {
+            return MarkerLayer(
+              markers: [
+                ...state.orders.map(
+                  (order) => Marker(
+                    point: LatLng(order.toLatitude, order.toLongitude),
+                    child: Tooltip(
+                      message:
+                          "#${order.id.toString()} | ${order.nameUser} | ${order.phoneUser}",
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: order.color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.home,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),
@@ -144,7 +205,7 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
     );
   }
 
-  Marker buildPin(
+  Marker buildMarkerMaster(
           BuildContext context, LatLng point, double bearingInRadians) =>
       Marker(
         point: point,

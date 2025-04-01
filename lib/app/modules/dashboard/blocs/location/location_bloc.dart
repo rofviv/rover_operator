@@ -86,4 +86,14 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       rotation: state.rotateMap ? (state.bearing * -1) : 0,
     );
   }
+
+  void goTo(double latitude, double longitude,
+      {double? zoom, double? rotation}) {
+    add(const LocationDraggingEvent(true));
+    animatedMapController.animateTo(
+      dest: LatLng(latitude, longitude),
+      zoom: zoom ?? state.zoom,
+      rotation: rotation ?? (state.rotateMap ? (state.bearing * -1) : 0),
+    );
+  }
 }

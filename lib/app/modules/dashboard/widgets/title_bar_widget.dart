@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 import 'package:rover_operator/app/modules/dashboard/blocs/dashboard/dashboard_bloc.dart';
 
 import '../blocs/session/session_bloc.dart';
@@ -10,7 +11,8 @@ import '../screens/settings_screen.dart';
 import '../utils/form_keys.dart';
 
 class TitleBarWidget extends StatelessWidget {
-  const TitleBarWidget({super.key, required this.dashboardBloc, required this.sessionBloc});
+  const TitleBarWidget(
+      {super.key, required this.dashboardBloc, required this.sessionBloc});
 
   final DashboardBloc dashboardBloc;
   final SessionBloc sessionBloc;
@@ -228,6 +230,39 @@ class TitleBarWidget extends StatelessWidget {
                           );
                         }
                       },
+                    ),
+                  ),
+                  Tooltip(
+                    message: 'Timing',
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Row(
+                        children: [
+                          const Icon(Icons.timer),
+                          const SizedBox(width: 5),
+                          BlocBuilder<SessionBloc, SessionState>(
+                            bloc: sessionBloc,
+                            builder: (context, sessionState) {
+                              if (sessionState.driverTiming == null) {
+                                return Text(
+                                  "Timing",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                );
+                              }
+                              return Text(
+                                "${sessionState.driverTiming!.zone} | ${DateFormat('h:mm a').format(sessionState.driverTiming!.startTiming.toLocal())} - ${DateFormat('h:mm a').format(sessionState.driverTiming!.endTiming.toLocal())}",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

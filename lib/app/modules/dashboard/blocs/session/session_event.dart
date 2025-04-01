@@ -26,3 +26,15 @@ class OnSetOrdersEvent extends SessionEvent {
 
   const OnSetOrdersEvent(this.orders);
 }
+
+class OnSetDriverTimingEvent extends SessionEvent {
+  final DriverTimingModel driverTiming;
+
+  const OnSetDriverTimingEvent(this.driverTiming);
+}
+
+class OnLoadingOrdersEvent extends SessionEvent {
+  final bool isLoading;
+
+  const OnLoadingOrdersEvent(this.isLoading);
+}
