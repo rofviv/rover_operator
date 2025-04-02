@@ -1,20 +1,16 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:rover_operator/app/modules/dashboard/widgets/title_bar_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'blocs/dashboard/dashboard_bloc.dart';
 import 'blocs/location/location_bloc.dart';
 import 'blocs/session/session_bloc.dart';
-import 'screens/settings_screen.dart';
-import 'utils/form_keys.dart';
 import 'utils/payment_type.dart';
 import 'widgets/dashboard_actions_widget.dart';
 import 'widgets/map_widget.dart';
+import 'widgets/title_bar_widget.dart';
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget(

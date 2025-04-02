@@ -28,7 +28,7 @@ class OnSetOrdersEvent extends SessionEvent {
 }
 
 class OnSetDriverTimingEvent extends SessionEvent {
-  final DriverTimingModel driverTiming;
+  final DriverTimingModel? driverTiming;
 
   const OnSetDriverTimingEvent(this.driverTiming);
 }
@@ -37,4 +37,22 @@ class OnLoadingOrdersEvent extends SessionEvent {
   final bool isLoading;
 
   const OnLoadingOrdersEvent(this.isLoading);
+}
+
+class OnSetZonesEvent extends SessionEvent {
+  final List<ZoneModel> zones;
+
+  const OnSetZonesEvent(this.zones);
+}
+
+class OnSetSelectedZoneEvent extends SessionEvent {
+  final ZoneModel zone;
+
+  const OnSetSelectedZoneEvent(this.zone);
+}
+
+class OnLoadingCreateTimingEvent extends SessionEvent {
+  final bool isLoading;
+
+  const OnLoadingCreateTimingEvent(this.isLoading);
 }

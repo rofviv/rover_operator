@@ -31,8 +31,8 @@ class DriverTimingModel {
         endTiming: DateTime.parse(map["end_timing"]),
         zoneId: map["zone_id"],
         zone: map["zone"],
-        zoneLatitude: map["zoneLatitude"] ?? 0,
-        zoneLongitude: map["zoneLongitude"] ?? 0,
+        zoneLatitude: map["zoneLatitude"]?.toDouble() ?? 0,
+        zoneLongitude: map["zoneLongitude"]?.toDouble() ?? 0,
         zoneRadius: map["zoneRadius"]?.toDouble() ?? 500,
       );
 

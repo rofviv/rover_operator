@@ -1,14 +1,18 @@
 class UserModel {
-  final int? id;
+  final int id;
   final String? name;
   final String? email;
   final String? status;
+  final int modalityId;
+  final int cityId;
 
   UserModel({
-    this.id,
+    required this.id,
     this.name,
     this.email,
     this.status,
+    required this.modalityId,
+    required this.cityId,
   });
 
   UserModel copyWith({
@@ -16,12 +20,16 @@ class UserModel {
     String? name,
     String? email,
     String? status,
+    int? modalityId,
+    int? cityId,
   }) =>
       UserModel(
         id: id ?? this.id,
         name: name ?? this.name,
         email: email ?? this.email,
         status: status ?? this.status,
+        modalityId: modalityId ?? this.modalityId,
+        cityId: cityId ?? this.cityId,
       );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -29,6 +37,8 @@ class UserModel {
         name: json["name"],
         email: json["email"],
         status: json["status"],
+        modalityId: json["modalityId"] ?? 1,
+        cityId: json["city_id"] ?? 1,
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,5 +46,7 @@ class UserModel {
         "name": name,
         "email": email,
         "status": status,
+        "modalityId": modalityId,
+        "city_id": cityId,
       };
 }

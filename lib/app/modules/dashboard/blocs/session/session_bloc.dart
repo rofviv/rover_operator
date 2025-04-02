@@ -4,12 +4,15 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/preferences_repository.dart';
+import '../../data/dtos/create_timing_dto.dart';
 import '../../data/dtos/fetch_orders_dto.dart';
 import '../../data/dtos/login_dto.dart';
 import '../../data/models/driver_timing_model.dart';
 import '../../data/models/order_model.dart';
 import '../../data/models/user_model.dart';
+import '../../data/models/zone_model.dart';
 import '../../data/repositories/patio_repository.dart';
+import '../../utils/form_keys.dart';
 
 part 'session_event.dart';
 part 'session_state.dart';
@@ -31,11 +34,21 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<OnSetOrdersEvent>((event, emit) =>
         emit(state.copyWith(orders: event.orders, isLoadingOrders: false)));
 
-    on<OnSetDriverTimingEvent>((event, emit) =>
-        emit(state.copyWith(driverTiming: event.driverTiming)));
+    on<OnSetDriverTimingEvent>((event, emit) => emit(state.copyWith(
+        driverTiming: event.driverTiming,
+        clearDriverTiming: event.driverTiming == null)));
 
     on<OnLoadingOrdersEvent>((event, emit) =>
         emit(state.copyWith(isLoadingOrders: event.isLoading)));
+
+    on<OnSetZonesEvent>(
+        (event, emit) => emit(state.copyWith(zones: event.zones)));
+
+    on<OnSetSelectedZoneEvent>(
+        (event, emit) => emit(state.copyWith(selectedZone: event.zone)));
+
+    on<OnLoadingCreateTimingEvent>((event, emit) =>
+        emit(state.copyWith(isLoadingCreateTiming: event.isLoading)));
 
     init();
   }
@@ -50,6 +63,8 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       _timerOrders = Timer.periodic(const Duration(minutes: 1), (timer) {
         getOrdersByDriver();
       });
+      await Future.delayed(const Duration(seconds: 1));
+      getZones();
     }
   }
 
@@ -81,7 +96,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         add(OnSetDriverTimingEvent(timing));
       }
     } catch (e) {
-      print(e.toString());
+      add(const OnSetDriverTimingEvent(null));
     }
   }
 
@@ -95,5 +110,39 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   void logout() {
     _preferencesRepository.clearSession();
     add(SessionLogoutEvent());
+  }
+
+  Future<void> createTiming() async {
+    try {
+      add(const OnLoadingCreateTimingEvent(true));
+      await _patioRepository.createTiming(
+        CreateTimingDto(
+          startTiming: DateTime.parse(startTimingKey.text),
+          endTiming: DateTime.parse(endTimingKey.text),
+          limitTiming: 1,
+          modalityId: state.user!.modalityId,
+          zoneId: state.selectedZone!.id,
+          extraAmount: 0,
+          bonus: 0,
+          userId: state.user!.id,
+          description: "Create from rover operator",
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      getDriverCurrentTiming();
+      add(const OnLoadingCreateTimingEvent(false));
+    } catch (e) {
+      add(const OnLoadingCreateTimingEvent(false));
+      rethrow;
+    }
+  }
+
+  Future<void> getZones() async {
+    final zones = await _patioRepository.getZonesByCityId(state.user!.cityId);
+    add(OnSetZonesEvent(zones));
+  }
+
+  Future<void> updateStatusOrder(int driverOrderId, String status) async {
+    await _patioRepository.updateStatusOrder(driverOrderId, status);
   }
 }
