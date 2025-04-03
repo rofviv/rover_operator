@@ -56,3 +56,9 @@ class OnLoadingCreateTimingEvent extends SessionEvent {
 
   const OnLoadingCreateTimingEvent(this.isLoading);
 }
+
+class OnLoadingUpdateOrderEvent extends SessionEvent {
+  final bool isLoading;
+
+  const OnLoadingUpdateOrderEvent(this.isLoading);
+}

@@ -9,6 +9,7 @@ class SessionState extends Equatable {
   final List<ZoneModel> zones;
   final ZoneModel? selectedZone;
   final bool isLoadingCreateTiming;
+  final bool isLoadingUpdateOrder;
 
   const SessionState({
     this.user,
@@ -19,6 +20,7 @@ class SessionState extends Equatable {
     this.zones = const [],
     this.selectedZone,
     this.isLoadingCreateTiming = false,
+    this.isLoadingUpdateOrder = false,
   });
 
   SessionState copyWith({
@@ -31,6 +33,7 @@ class SessionState extends Equatable {
     List<ZoneModel>? zones,
     ZoneModel? selectedZone,
     bool? isLoadingCreateTiming,
+    bool? isLoadingUpdateOrder,
   }) =>
       SessionState(
         user: user ?? this.user,
@@ -41,6 +44,7 @@ class SessionState extends Equatable {
         zones: zones ?? this.zones,
         selectedZone: selectedZone ?? this.selectedZone,
         isLoadingCreateTiming: isLoadingCreateTiming ?? this.isLoadingCreateTiming,
+        isLoadingUpdateOrder: isLoadingUpdateOrder ?? this.isLoadingUpdateOrder,
       );
 
   @override
@@ -53,5 +57,6 @@ class SessionState extends Equatable {
         zones,
         selectedZone,
         isLoadingCreateTiming,
+        isLoadingUpdateOrder,
       ];
 }

@@ -7,6 +7,8 @@ import '../../../../core/preferences_repository.dart';
 import '../../data/dtos/create_timing_dto.dart';
 import '../../data/dtos/fetch_orders_dto.dart';
 import '../../data/dtos/login_dto.dart';
+import '../../data/dtos/update_order.dto.dart';
+import '../../data/dtos/update_user_dto.dart';
 import '../../data/models/driver_timing_model.dart';
 import '../../data/models/order_model.dart';
 import '../../data/models/user_model.dart';
@@ -49,6 +51,9 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
 
     on<OnLoadingCreateTimingEvent>((event, emit) =>
         emit(state.copyWith(isLoadingCreateTiming: event.isLoading)));
+
+    on<OnLoadingUpdateOrderEvent>((event, emit) =>
+        emit(state.copyWith(isLoadingUpdateOrder: event.isLoading)));
 
     init();
   }
@@ -143,6 +148,54 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   }
 
   Future<void> updateStatusOrder(int driverOrderId, String status) async {
-    await _patioRepository.updateStatusOrder(driverOrderId, status);
+    try {
+      add(const OnLoadingUpdateOrderEvent(true));
+      await _patioRepository.updateStatusOrder(driverOrderId, status);
+      await getOrdersByDriver();
+      add(const OnLoadingUpdateOrderEvent(false));
+    } catch (e) {
+      add(const OnLoadingUpdateOrderEvent(false));
+      rethrow;
+    }
+  }
+
+  Future<void> updateOrder(int orderId, UpdateOrderDto dto) async {
+    try {
+      add(const OnLoadingUpdateOrderEvent(true));
+      await _patioRepository.updateOrder(orderId, dto);
+      await getOrdersByDriver();
+      add(const OnLoadingUpdateOrderEvent(false));
+    } catch (e) {
+      add(const OnLoadingUpdateOrderEvent(false));
+      rethrow;
+    }
+  }
+
+  Future<void> confirmOrder(int driverOrderId) async {
+    try {
+      add(const OnLoadingUpdateOrderEvent(true));
+      await _patioRepository.confirmOrder(driverOrderId);
+      await getOrdersByDriver();
+      add(const OnLoadingUpdateOrderEvent(false));
+    } catch (e) {
+      add(const OnLoadingUpdateOrderEvent(false));
+      rethrow;
+    }
+  }
+
+  Future<void> confirmDropoff(int orderId) async {
+    try {
+      add(const OnLoadingUpdateOrderEvent(true));
+      await _patioRepository.confirmDropoff(orderId);
+      await getOrdersByDriver();
+      add(const OnLoadingUpdateOrderEvent(false));
+    } catch (e) {
+      add(const OnLoadingUpdateOrderEvent(false));
+      rethrow;
+    }
+  }
+
+  Future<void> updateUser(UpdateUserDto dto) async {
+    await _patioRepository.updateUser(state.user!.id, dto);
   }
 }

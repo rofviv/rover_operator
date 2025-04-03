@@ -1,4 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'blocs/dashboard/dashboard_bloc.dart';
 import 'blocs/location/location_bloc.dart';
 import 'blocs/session/session_bloc.dart';
+import 'data/dtos/update_order.dto.dart';
+import 'data/models/order_model.dart';
 import 'utils/payment_type.dart';
 import 'widgets/dashboard_actions_widget.dart';
 import 'widgets/map_widget.dart';
@@ -485,7 +488,8 @@ class DashboardWidget extends StatelessWidget {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               SelectableText(
-                                                  "ID: #${order.id.toString()}"),
+                                                "ID: #${order.id.toString()}",
+                                              ),
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(11),
@@ -496,15 +500,28 @@ class DashboardWidget extends StatelessWidget {
                                               ),
                                             ],
                                           ),
-                                          Text("Name: ${order.nameUser}"),
-                                          Text("Phone: ${order.phoneUser}"),
+                                          Text(
+                                            "Door number: ${order.doorNumber}",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SelectableText(
+                                              "Name: ${order.nameUser}"),
+                                          SelectableText(
+                                              "Phone: ${order.phoneUser}"),
                                           const Divider(),
-                                          Text("From: ${order.merchantName}"),
-                                          Text("${order.fromAddress}"),
+                                          SelectableText(
+                                              "From: ${order.merchantName}"),
+                                          SelectableText(order.fromAddress),
                                           const Divider(),
-                                          Text("To: ${order.toAddress}"),
+                                          SelectableText(
+                                              "To: ${order.toAddress}"),
                                           const Divider(),
                                           TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.green,
+                                            ),
                                             onPressed: () async {
                                               if (order.urlImageReference !=
                                                   null) {
@@ -519,17 +536,21 @@ class DashboardWidget extends StatelessWidget {
                                                 //
                                               }
                                             },
-                                            child: Row(
+                                            child: const Row(
                                               children: [
                                                 Text("Details"),
                                                 SizedBox(width: 5),
-                                                Icon(Icons.exit_to_app),
+                                                Icon(
+                                                  Icons.exit_to_app,
+                                                  color: Colors.green,
+                                                ),
                                               ],
                                             ),
                                           ),
                                           const Divider(),
                                           Text(
-                                              "Payment type: ${paymentNameById(order.paymentModeId)}"),
+                                            "Payment type: ${paymentNameById(order.paymentModeId)}",
+                                          ),
                                           Text("Subtotal: ${order.total}"),
                                           Text(
                                               "Delivery cost: ${order.baseCost}"),
@@ -542,14 +563,11 @@ class DashboardWidget extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Status: ${order.status}"),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.green,
-                                                  foregroundColor: Colors.white,
-                                                ),
-                                                onPressed: () {},
-                                                child: const Text("Accept"),
+                                              StatusOrderWidget(order: order),
+                                              ButtonStatusOrderWidget(
+                                                order: order,
+                                                sessionBloc: sessionBloc,
+                                                state: state,
                                               ),
                                             ],
                                           ),
@@ -577,6 +595,149 @@ class DashboardWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class StatusOrderWidget extends StatelessWidget {
+  const StatusOrderWidget({
+    super.key,
+    required this.order,
+  });
+
+  final Order order;
+
+  @override
+  Widget build(BuildContext context) {
+    if (order.status.contains("pending") || order.status.contains("assigned")) {
+      return Text(
+        order.status.toUpperCase(),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+    if (order.status.contains("arrived")) {
+      return Text(
+        order.status.toUpperCase() + (order.pickupUp == 1 ? "\nPickup" : ""),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+    if (order.status.contains("dispatched")) {
+      return Text(
+        order.status.toUpperCase() +
+            (order.dropoffArrived == 1 ? "\nDropoff" : ""),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+    return Text(
+      order.status.toUpperCase(),
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+class ButtonStatusOrderWidget extends StatelessWidget {
+  const ButtonStatusOrderWidget({
+    super.key,
+    required this.order,
+    required this.sessionBloc,
+    required this.state,
+  });
+
+  final Order order;
+  final SessionBloc sessionBloc;
+  final SessionState state;
+
+  @override
+  Widget build(BuildContext context) {
+    if (order.status.contains("pending") || order.status.contains("assigned")) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: state.isLoadingUpdateOrder
+            ? null
+            : () {
+                sessionBloc.updateStatusOrder(order.driverOrderId, "arrived");
+              },
+        child: state.isLoadingUpdateOrder
+            ? const CupertinoActivityIndicator()
+            : const Text("Arrived"),
+      );
+    }
+    if (order.status.contains("arrived") && order.pickupUp == 0) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: state.isLoadingUpdateOrder
+            ? null
+            : () {
+                sessionBloc.updateOrder(order.id, UpdateOrderDto(pickedUp: 1));
+              },
+        child: state.isLoadingUpdateOrder
+            ? const CupertinoActivityIndicator()
+            : const Text("Picked up"),
+      );
+    }
+    if (order.status.contains("arrived") && order.pickupUp == 1) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: state.isLoadingUpdateOrder
+            ? null
+            : () {
+                sessionBloc.updateStatusOrder(
+                    order.driverOrderId, "dispatched");
+              },
+        child: state.isLoadingUpdateOrder
+            ? const CupertinoActivityIndicator()
+            : const Text("Dispatched"),
+      );
+    }
+    if (order.status.contains("dispatched") && order.dropoffArrived == 0) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: state.isLoadingUpdateOrder
+            ? null
+            : () {
+                sessionBloc.confirmDropoff(order.id);
+              },
+        child: state.isLoadingUpdateOrder
+            ? const CupertinoActivityIndicator()
+            : const Text("Dropoff"),
+      );
+    }
+    if (order.status.contains("dispatched") && order.dropoffArrived == 1) {
+      return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: state.isLoadingUpdateOrder
+            ? null
+            : () {
+                sessionBloc.updateStatusOrder(order.driverOrderId, "complete");
+              },
+        child: state.isLoadingUpdateOrder
+            ? const CupertinoActivityIndicator()
+            : const Text("Complete"),
+      );
+    }
+    return const SizedBox();
   }
 }
 

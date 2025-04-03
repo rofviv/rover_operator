@@ -6,6 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../../core/helpers/audio_helper.dart';
 import '../../../../core/preferences_repository.dart';
+import '../../data/dtos/update_user_dto.dart';
 import '../../data/models/cube_model.dart';
 import '../../data/models/relay_action.dart';
 import '../../data/models/relay_model.dart';
@@ -16,6 +17,7 @@ import '../../utils/beep_controller.dart';
 import '../../utils/keys.dart';
 import '../../utils/relays_data.dart';
 import '../location/location_bloc.dart';
+import '../session/session_bloc.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
@@ -24,9 +26,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final RoverRepository roverRepository;
   final PreferencesRepository preferencesRepository;
   final LocationBloc locationBloc;
+  final SessionBloc sessionBloc;
   Timer? _timer;
+  Timer? _timerUpdateUser;
 
-  DashboardBloc(this.roverRepository, this.preferencesRepository, this.locationBloc)
+  DashboardBloc(this.roverRepository, this.preferencesRepository,
+      this.locationBloc, this.sessionBloc)
       : super(
           DashboardState(
             relaysMap: relaysMap,
@@ -202,7 +207,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     on<DashboardSetCubeStatusEvent>((event, emit) {
       emit(state.copyWith(cubeStatus: event.cubeStatus));
-      locationBloc.add(LocationUpdateSetEvent(latitude: event.cubeStatus.lat ?? 0, longitude: event.cubeStatus.lon ?? 0,  bearing: event.cubeStatus.yaw));
+      locationBloc.add(LocationUpdateSetEvent(
+          latitude: event.cubeStatus.lat ?? 0,
+          longitude: event.cubeStatus.lon ?? 0,
+          bearing: event.cubeStatus.yaw));
     });
     on<DashboardSetLatencyEvent>((event, emit) {
       emit(state.copyWith(
@@ -388,6 +396,22 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         state.roverStatus.copyWith(lidarStatus: res.lidarStatus)));
   }
 
+  void updateUser() async {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      print("updateUser --------------------------");
+      if (state.cubeStatus.lat != null && state.cubeStatus.lon != null) {
+        sessionBloc.updateUser(
+          UpdateUserDto(
+            lastLatitude: state.cubeStatus.lat,
+            lastLongitude: state.cubeStatus.lon,
+            bearing: state.cubeStatus.yaw ?? 0,
+          ),
+        );
+      }
+    });
+  }
+
   void socket() {
     io.Socket socket = io.io(
       'http://localhost:5000',
@@ -396,6 +420,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
     socket.onConnect((_) {
       add(const DashboardSetSocketConnectedEvent(true));
+      updateUser();
     });
     socket.on("latency", (data) {
       final latencyPing = data["ping_time"]?.toDouble();

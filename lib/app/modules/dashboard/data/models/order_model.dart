@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -36,6 +35,9 @@ class Order {
     this.businessName,
     this.nit,
     this.feeMerchant = 0,
+    this.pickupUp = 0,
+    this.dropoffArrived = 0,
+    this.doorNumber = 1,
     this.color = Colors.black,
   });
 
@@ -70,6 +72,9 @@ class Order {
   final String? businessName;
   final String? nit;
   final double feeMerchant;
+  final int pickupUp;
+  final int dropoffArrived;
+  final int doorNumber;
   Color color;
 
   factory Order.fromMap(Map<String, dynamic> map) => Order(
@@ -110,6 +115,9 @@ class Order {
         businessName: map["business_name"] ?? map["businessName"],
         nit: map["nit"],
         feeMerchant: map["fee_merchant"]?.toDouble() ?? 0,
+        pickupUp: map["picked_up"] ?? 0,
+        dropoffArrived: map["dropoff_arrived"] ?? 0,
+        doorNumber: map["door_number"] ?? 1,
         color: Colors.black,
       );
 
@@ -125,44 +133,9 @@ class Order {
       Colors.indigo,
       Colors.amber,
     ];
-  
+
     return colors[colorIndex];
   }
-
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "from_address": fromAddress,
-        "from_latitude": fromLatitude,
-        "from_longitude": fromLongitude,
-        "to_address": toAddress,
-        "to_latitude": toLatitude,
-        "to_longitude": toLongitude,
-        "meters_estimated_distance": metersEstimatedDistance,
-        "phone_user": phoneUser,
-        "name_user": nameUser,
-        "status": status,
-        "tip": tip,
-        "total": total,
-        "discount": discount,
-        "merchant_id": merchantId,
-        "city_id": cityId,
-        "createdAt": createdAt.toIso8601String(),
-        "payment_mode_id": paymentModeId,
-        'details':
-            details != null ? json.encode(Product.toJsonList(details!)) : null,
-        "user_id": userId,
-        "comment": comment,
-        "instructions": instructions,
-        "driverOrderId": driverOrderId,
-        "merchantName": merchantName,
-        "order_ready_at": orderReadyAt?.toIso8601String(),
-        "url_image_reference": urlImageReference,
-        "isConfirmOrder": isConfirmOrder,
-        "baseCost": baseCost,
-        "business_name": businessName,
-        "nit": nit,
-        "fee_merchant": feeMerchant
-      };
 
   static List<Order> fromList(List list) =>
       list.map((e) => Order.fromMap(e)).toList();
