@@ -34,8 +34,17 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^4.0.0
+  msix: ^3.16.7
   flutter_test:
     sdk: flutter
+# dart run msix:create
+msix_config:
+  display_name: Rover Operator
+  publisher_display_name: Motoclick
+  identity_name: com.rover.operator
+  msix_version: 1.0.0.0
+  # logo_path: C:\path\to\logo.png
+  # capabilities: internetClient, location, microphone, webcam
 
 flutter:
   uses-material-design: true
