@@ -36,19 +36,19 @@ class DashboardActionsWidget extends StatelessWidget {
             },
             child: GlobalShortcuts(
               shortcuts: {
-                const SingleActivator(LogicalKeyboardKey.arrowLeft, alt: true):
+                const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true):
                     LeftArrowIntent(),
-                const SingleActivator(LogicalKeyboardKey.arrowRight, alt: true):
+                const SingleActivator(LogicalKeyboardKey.arrowRight, control: true):
                     RightArrowIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyP, alt: true):
+                const SingleActivator(LogicalKeyboardKey.keyP, control: true):
                     ParkingIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyD, alt: true):
+                const SingleActivator(LogicalKeyboardKey.keyD, control: true):
                     DoorIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyL, alt: true):
+                const SingleActivator(LogicalKeyboardKey.keyL, control: true):
                     LightIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyC, alt: true):
+                const SingleActivator(LogicalKeyboardKey.keyC, control: true):
                     ClaxonIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyR, alt: true):
+                const SingleActivator(LogicalKeyboardKey.keyR, control: true):
                     RetroIntent(),
               },
               child: Column(
