@@ -265,7 +265,7 @@ class DashboardWidget extends StatelessWidget {
                       return Stack(
                         children: [
                           Container(
-                            height: 600,
+                            height: state.mapHeight,
                             decoration: BoxDecoration(
                               border: !state.socketConnected
                                   ? Border.all(

@@ -12,6 +12,8 @@ class ParkingIntent extends Intent {}
 
 class DoorIntent extends Intent {}
 
+class DoorBackIntent extends Intent {}
+
 class LightIntent extends Intent {}
 
 class ClaxonIntent extends Intent {}
@@ -57,6 +59,16 @@ class DoorAction extends Action<DoorIntent> {
   @override
   void invoke(covariant DoorIntent intent) {
     dashboardBloc.add(DashboardDoorEvent());
+  }
+}
+
+class DoorBackAction extends Action<DoorBackIntent> {
+  final DashboardBloc dashboardBloc;
+  DoorBackAction({required this.dashboardBloc});
+
+  @override
+  void invoke(covariant DoorBackIntent intent) {
+    dashboardBloc.add(DashboardDoorBackEvent());
   }
 }
 

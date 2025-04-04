@@ -25,6 +25,8 @@ class DashboardState extends Equatable {
   final double currentLatencyPing;
   final bool currentLatencyAlert;
 
+  final double mapHeight;
+
   const DashboardState({
     this.activeSound = true,
     this.isLoading = false,
@@ -46,6 +48,7 @@ class DashboardState extends Equatable {
     this.distanceSonar4 = 0,
     this.currentLatencyPing = 0,
     this.currentLatencyAlert = false,
+    this.mapHeight = 600,
   });
 
   DashboardState copyWith({
@@ -69,6 +72,7 @@ class DashboardState extends Equatable {
     bool? socketConnected,
     double? currentLatencyPing,
     bool? currentLatencyAlert,
+    double? mapHeight,
   }) {
     return DashboardState(
       activeSound: activeSound ?? this.activeSound,
@@ -91,6 +95,7 @@ class DashboardState extends Equatable {
       socketConnected: socketConnected ?? this.socketConnected,
       currentLatencyPing: currentLatencyPing ?? this.currentLatencyPing,
       currentLatencyAlert: currentLatencyAlert ?? this.currentLatencyAlert,
+      mapHeight: mapHeight ?? this.mapHeight,
     );
   }
 
@@ -116,5 +121,6 @@ class DashboardState extends Equatable {
         socketConnected,
         currentLatencyPing,
         currentLatencyAlert,
+        mapHeight,
       ];
 }

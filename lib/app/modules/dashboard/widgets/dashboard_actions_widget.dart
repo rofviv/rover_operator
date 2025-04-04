@@ -30,6 +30,7 @@ class DashboardActionsWidget extends StatelessWidget {
               RightArrowIntent: RightArrowAction(dashboardBloc: dashboardBloc),
               ParkingIntent: ParkingAction(dashboardBloc: dashboardBloc),
               DoorIntent: DoorAction(dashboardBloc: dashboardBloc),
+              DoorBackIntent: DoorBackAction(dashboardBloc: dashboardBloc),
               LightIntent: LightAction(dashboardBloc: dashboardBloc),
               ClaxonIntent: ClaxonAction(dashboardBloc: dashboardBloc),
               RetroIntent: RetroAction(dashboardBloc: dashboardBloc),
@@ -44,6 +45,8 @@ class DashboardActionsWidget extends StatelessWidget {
                     ParkingIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyD, control: true):
                     DoorIntent(),
+                const SingleActivator(LogicalKeyboardKey.keyT, control: true):
+                    DoorBackIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyL, control: true):
                     LightIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyB, control: true):
@@ -208,6 +211,26 @@ class DashboardActionsWidget extends StatelessWidget {
                                     'assets/icons/car_door.png',
                                     width: state.sizeIcon,
                                     color: state.relaysMap[Relays.door]!.status
+                                        ? Colors.amberAccent
+                                        : Colors.grey.shade700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Tooltip(
+                              message:
+                                  "${state.relaysMap[Relays.doorBack]!.name} (${state.relaysMap[Relays.doorBack]!.shortcut})",
+                              child: GestureDetector(
+                                onTap: () =>
+                                    dashboardBloc.add(DashboardDoorBackEvent()),
+                                child: Container(
+                                  color: Colors.transparent,
+                                  child: Image.asset(
+                                    'assets/icons/car_door_back.png',
+                                    width: state.sizeIcon,
+                                    color: state.relaysMap[Relays.doorBack]!
+                                        .status
                                         ? Colors.amberAccent
                                         : Colors.grey.shade700,
                                   ),

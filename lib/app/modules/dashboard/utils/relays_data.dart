@@ -4,8 +4,8 @@ import '../data/models/relay_action.dart';
 enum Relays {
   leftArrow,
   rightArrow,
-  // parking,
   door,
+  doorBack,
   light,
   claxon,
   retro,
@@ -24,18 +24,18 @@ final Map<Relays, RelayAction> relaysMap = {
       audio: AudioHelper("light.mp3"),
       relay: 2,
       shortcut: "CTRL + RIGHT"),
-  // Relays.parking: RelayAction(
-  //     id: "parking",
-  //     name: "Parking",
-  //     audio: audioParking,
-  //     relay: 3,
-  //     shortcut: "CTRL + P"),
   Relays.door: RelayAction(
       id: Relays.door.name,
       name: "Door",
       audio: AudioHelper("door.mp3"),
       relay: 4,
       shortcut: "CTRL + D"),
+  Relays.doorBack: RelayAction(
+      id: Relays.doorBack.name,
+      name: "Door Back",
+      audio: AudioHelper("door.mp3"),
+      relay: 8,
+      shortcut: "CTRL + T"),
   Relays.light: RelayAction(
       id: Relays.light.name,
       name: "Light",

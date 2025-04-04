@@ -75,6 +75,37 @@ class SettingsScreen extends StatelessWidget {
                     )
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Map Height:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            dashboardBloc.add(
+                                DashboardSetMapHeightEvent(state.mapHeight - 10));
+                          },
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text('${state.mapHeight}'),
+                        IconButton(
+                          onPressed: () {
+                            dashboardBloc.add(
+                                DashboardSetMapHeightEvent(state.mapHeight + 10));
+                          },
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
                 const Divider(),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,6 +191,33 @@ class SettingsScreen extends StatelessWidget {
                           .toList(),
                       onChanged: (value) {
                         dashboardBloc.setRelays(Relays.door, value ?? 0);
+                      },
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      Relays.doorBack.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<int>(
+                      value: state.relaysMap[Relays.doorBack]?.relay,
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                          .map(
+                            (e) => DropdownMenuItem<int>(
+                              value: e,
+                              child: Text('$e'),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setRelays(Relays.doorBack, value ?? 0);
                       },
                     ),
                   ],

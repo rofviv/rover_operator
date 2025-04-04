@@ -116,6 +116,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       toggleRelayRover(map[Relays.door]!.relay.toString());
       _playAudio(map[Relays.door]!.status, map[Relays.door]!.audio);
     });
+    on<DashboardDoorBackEvent>((event, emit) {
+      final map = {...state.relaysMap};
+      map[Relays.doorBack] =
+          map[Relays.doorBack]!.copyWith(status: !map[Relays.doorBack]!.status);
+      emit(state.copyWith(relaysMap: map));
+      toggleRelayRover(map[Relays.doorBack]!.relay.toString());
+      _playAudio(map[Relays.doorBack]!.status, map[Relays.doorBack]!.audio);
+    });
     on<DashboardLightEvent>((event, emit) {
       final map = {...state.relaysMap};
       map[Relays.light] =
@@ -218,14 +226,22 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           currentLatencyPing: event.latencyPing,
           currentLatencyAlert: event.latencyAlert));
     });
+    on<DashboardSetMapHeightEvent>((event, emit) async {
+      await preferencesRepository.setMapHeight(event.mapHeight.toString());
+      emit(state.copyWith(mapHeight: event.mapHeight));
+    });
     init();
   }
 
   void init() async {
     final ipRemote = await preferencesRepository.ipRemote;
     final sizeIcon = await preferencesRepository.sizeIcon;
+    final mapHeight = await preferencesRepository.mapHeight;
     if (sizeIcon != null) {
       add(DashboardSizeIconEvent(double.parse(sizeIcon)));
+    }
+    if (mapHeight != null) {
+      add(DashboardSetMapHeightEvent(double.parse(mapHeight)));
     }
     if (ipRemote != null) {
       ipRemoteControler.text = ipRemote;
@@ -267,6 +283,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final retro = await preferencesRepository.getRelay(Relays.retro.toString());
     if (retro != null) {
       map[Relays.retro] = map[Relays.retro]!.copyWith(relay: retro);
+    }
+    final doorBack =
+        await preferencesRepository.getRelay(Relays.doorBack.toString());
+    if (doorBack != null) {
+      map[Relays.doorBack] = map[Relays.doorBack]!.copyWith(relay: doorBack);
     }
     add(DashboardSetRelaysEvent(map));
   }

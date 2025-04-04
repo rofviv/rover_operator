@@ -20,6 +20,8 @@ class DashboardParkingEvent extends DashboardEvent {}
 
 class DashboardDoorEvent extends DashboardEvent {}
 
+class DashboardDoorBackEvent extends DashboardEvent {}
+
 class DashboardLightEvent extends DashboardEvent {}
 
 class DashboardClaxonEvent extends DashboardEvent {}
@@ -110,4 +112,9 @@ class DashboardSetLatencyEvent extends DashboardEvent {
   final double latencyPing;
   final bool latencyAlert;
   const DashboardSetLatencyEvent(this.latencyPing, this.latencyAlert);
+}
+
+class DashboardSetMapHeightEvent extends DashboardEvent {
+  final double mapHeight;
+  const DashboardSetMapHeightEvent(this.mapHeight);
 }
