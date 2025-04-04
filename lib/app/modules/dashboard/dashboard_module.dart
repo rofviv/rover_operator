@@ -10,7 +10,8 @@ import 'dashboard_widget.dart';
 import 'blocs/dashboard/dashboard_bloc.dart';
 import 'data/repositories/rover_repository.dart';
 
-const String baseUrlPatio = 'https://patio-driver-test.patiodelivery2.com';
+// const String baseUrlPatio = 'https://patio-driver-test.patiodelivery2.com';
+const String baseUrlPatio = 'https://www.patio-driver.patiodelivery2.com';
 
 class DashboardModule extends Module {
   static String route = "/dashboard/";

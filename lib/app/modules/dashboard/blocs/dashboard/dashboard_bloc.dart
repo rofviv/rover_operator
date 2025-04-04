@@ -218,7 +218,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           currentLatencyAlert: event.latencyAlert));
     });
     init();
-    socket();
   }
 
   void init() async {
@@ -230,6 +229,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (ipRemote != null) {
       ipRemoteControler.text = ipRemote;
       add(DashboardIpRemoteEvent(ipRemote));
+      await Future.delayed(const Duration(seconds: 2));
+      socket();
     } else {
       syncDataRover();
     }
@@ -414,7 +415,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   void socket() {
     io.Socket socket = io.io(
-      'http://localhost:5000',
+      "http://${state.ipRemote}",
       io.OptionBuilder().setTransports(['websocket']).setExtraHeaders(
           {'Origin': '*'}).build(),
     );

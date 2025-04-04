@@ -182,7 +182,7 @@ class DashboardActionsWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Tooltip(
-                              message: 'Parking (ALT + P)',
+                              message: 'Parking (CTRL + P)',
                               child: GestureDetector(
                                 onTap: () =>
                                     dashboardBloc.add(DashboardParkingEvent()),
@@ -344,7 +344,7 @@ class DashboardActionsWidget extends StatelessWidget {
                         ),
                       ),
                       Tooltip(
-                        message: 'Right (ALT + RIGHT)',
+                        message: 'Right (CTRL + RIGHT)',
                         child: GestureDetector(
                           onTap: () =>
                               dashboardBloc.add(DashboardRightArrowEvent()),
