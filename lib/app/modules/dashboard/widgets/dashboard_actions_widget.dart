@@ -36,17 +36,17 @@ class DashboardActionsWidget extends StatelessWidget {
             },
             child: GlobalShortcuts(
               shortcuts: {
-                const SingleActivator(LogicalKeyboardKey.arrowLeft, control: true):
-                    LeftArrowIntent(),
-                const SingleActivator(LogicalKeyboardKey.arrowRight, control: true):
-                    RightArrowIntent(),
+                const SingleActivator(LogicalKeyboardKey.arrowLeft,
+                    control: true): LeftArrowIntent(),
+                const SingleActivator(LogicalKeyboardKey.arrowRight,
+                    control: true): RightArrowIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyP, control: true):
                     ParkingIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyD, control: true):
                     DoorIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyL, control: true):
                     LightIntent(),
-                const SingleActivator(LogicalKeyboardKey.keyC, control: true):
+                const SingleActivator(LogicalKeyboardKey.keyB, control: true):
                     ClaxonIntent(),
                 const SingleActivator(LogicalKeyboardKey.keyR, control: true):
                     RetroIntent(),
@@ -344,7 +344,7 @@ class DashboardActionsWidget extends StatelessWidget {
                         ),
                       ),
                       Tooltip(
-                        message: 'Right (CTRL + RIGHT)',
+                        message: state.relaysMap[Relays.rightArrow]!.shortcut,
                         child: GestureDetector(
                           onTap: () =>
                               dashboardBloc.add(DashboardRightArrowEvent()),

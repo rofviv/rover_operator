@@ -47,7 +47,7 @@ final Map<Relays, RelayAction> relaysMap = {
       name: "Claxon",
       audio: AudioHelper("beep.mp3", loop: false),
       relay: 6,
-      shortcut: "CTRL + C"),
+      shortcut: "CTRL + B"),
   Relays.retro: RelayAction(
       id: Relays.retro.name,
       name: "Retro",
