@@ -311,7 +311,7 @@ class DashboardWidget extends StatelessWidget {
                               top: 10,
                               left: 10,
                               child: Text(
-                                "${state.distanceSonar2}",
+                                "${state.distanceSonar1}",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 22,
