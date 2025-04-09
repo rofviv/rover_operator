@@ -306,6 +306,19 @@ class DashboardWidget extends StatelessWidget {
                                     duration: 1000.milliseconds,
                                   ),
                             ),
+                          if (state.distanceSonar1 > 0)
+                            Positioned(
+                              top: 10,
+                              left: 10,
+                              child: Text(
+                                "${state.distanceSonar2}",
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           if (state.distanceSonar2 > 0)
                             Positioned(
                               top: -250,
@@ -332,6 +345,22 @@ class DashboardWidget extends StatelessWidget {
                                     duration: 1000.milliseconds,
                                   ),
                             ),
+                          if (state.distanceSonar2 > 0)
+                            Positioned(
+                              top: 10,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: Text(
+                                  "${state.distanceSonar2}",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           if (state.distanceSonar3 > 0)
                             Positioned(
                               top: -200,
@@ -356,6 +385,21 @@ class DashboardWidget extends StatelessWidget {
                                   .fadeOut(
                                     duration: 1000.milliseconds,
                                   ),
+                            ),
+                          if (state.distanceSonar3 > 0)
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: Center(
+                                child: Text(
+                                  "${state.distanceSonar3}",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           if (state.distanceSonar4 > 0)
                             Positioned(
@@ -382,6 +426,22 @@ class DashboardWidget extends StatelessWidget {
                                   .fadeOut(
                                     duration: 1000.milliseconds,
                                   ),
+                            ),
+                          if (state.distanceSonar4 > 0)
+                            Positioned(
+                              bottom: 10,
+                              right: 0,
+                              left: 0,
+                              child: Center(
+                                child: Text(
+                                  "${state.distanceSonar4}",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                         ],
                       );

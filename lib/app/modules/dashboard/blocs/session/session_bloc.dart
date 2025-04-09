@@ -65,7 +65,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       getDriverCurrentTiming();
       getOrdersByDriver();
       _timerOrders?.cancel();
-      _timerOrders = Timer.periodic(const Duration(minutes: 1), (timer) {
+      _timerOrders = Timer.periodic(const Duration(minutes: 3), (timer) {
         getOrdersByDriver();
       });
       await Future.delayed(const Duration(seconds: 1));

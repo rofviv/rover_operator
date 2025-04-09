@@ -421,8 +421,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   }
 
   void updateUser() async {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    _timerUpdateUser?.cancel();
+    _timerUpdateUser = Timer.periodic(const Duration(seconds: 60), (timer) {
       print("updateUser --------------------------");
       if (state.cubeStatus.lat != null && state.cubeStatus.lon != null) {
         sessionBloc.updateUser(
@@ -461,23 +461,27 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
     socket!.on('sensor_data', (data) {
       if (data["sensor"].contains("sonar")) {
-        if (state.roverStatus.sonarFrontStatus == null ||
-            state.roverStatus.sonarFrontStatus == "0") {
-          return;
+        if (state.roverStatus.sonarFrontStatus != null &&
+            state.roverStatus.sonarFrontStatus != "0") {
+          if (data["sensor"] == "sonar-1") {
+            add(DashboardSetDistanceSonar1Event(data["distance"].toDouble()));
+          } else if (data["sensor"] == "sonar-2") {
+            add(DashboardSetDistanceSonar2Event(data["distance"].toDouble()));
+          } else if (data["sensor"] == "sonar-3") {
+            add(DashboardSetDistanceSonar3Event(data["distance"].toDouble()));
+          }
+        }
+
+        if (state.roverStatus.sonarBackStatus != null &&
+            state.roverStatus.sonarBackStatus != "0") {
+          if (data["sensor"] == "sonar-4") {
+            add(DashboardSetDistanceSonar4Event(data["distance"].toDouble()));
+          }
         }
 
         if (state.activeSound) {
           BeepController()
               .startBeeping(data["distance"].toInt(), data["sensor"]);
-        }
-        if (data["sensor"] == "sonar-1") {
-          add(DashboardSetDistanceSonar1Event(data["distance"].toDouble()));
-        } else if (data["sensor"] == "sonar-2") {
-          add(DashboardSetDistanceSonar2Event(data["distance"].toDouble()));
-        } else if (data["sensor"] == "sonar-3") {
-          add(DashboardSetDistanceSonar3Event(data["distance"].toDouble()));
-        } else if (data["sensor"] == "sonar-4") {
-          add(DashboardSetDistanceSonar4Event(data["distance"].toDouble()));
         }
       }
       if (data["sensor"] == "lidar") {
