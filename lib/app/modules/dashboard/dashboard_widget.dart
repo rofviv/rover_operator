@@ -12,6 +12,7 @@ import 'data/dtos/update_order.dto.dart';
 import 'data/models/order_model.dart';
 import 'utils/payment_type.dart';
 import 'widgets/dashboard_actions_widget.dart';
+import 'widgets/map_lidar.dart';
 import 'widgets/map_widget.dart';
 import 'widgets/title_bar_widget.dart';
 
@@ -40,6 +41,11 @@ class DashboardWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   DashboardActionsWidget(dashboardBloc: dashboardBloc),
+                  RadarWidget(points: [
+                    {"distance": 53.3, "angle": 45.5},
+                    {"distance": 40.0, "angle": 60.0},
+                    {"distance": 70.0, "angle": 80.0},
+                  ]),
                   // const SizedBox(height: 20),
                   // BlocBuilder<DashboardBloc, DashboardState>(
                   //   bloc: dashboardBloc,
