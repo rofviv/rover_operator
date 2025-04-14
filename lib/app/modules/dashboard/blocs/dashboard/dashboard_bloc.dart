@@ -441,7 +441,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _timerHeartbeat?.cancel();
     _timerHeartbeat = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (socket!.connected) {
-        print("heartbeat --------------------------");
         socket!.emit('heartbeat', {'time': DateTime.now().toIso8601String()});
       }
     });
