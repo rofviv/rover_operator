@@ -41,11 +41,11 @@ class DashboardWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   DashboardActionsWidget(dashboardBloc: dashboardBloc),
-                  RadarWidget(points: [
-                    {"distance": 53.3, "angle": 45.5},
-                    {"distance": 40.0, "angle": 60.0},
-                    {"distance": 70.0, "angle": 80.0},
-                  ]),
+                  // RadarWidget(points: [
+                  //   {"distance": 53.3, "angle": 45.5},
+                  //   {"distance": 40.0, "angle": 60.0},
+                  //   {"distance": 70.0, "angle": 80.0},
+                  // ]),
                   // const SizedBox(height: 20),
                   // BlocBuilder<DashboardBloc, DashboardState>(
                   //   bloc: dashboardBloc,
@@ -190,80 +190,80 @@ class DashboardWidget extends StatelessWidget {
                   //     );
                   //   },
                   // ),
-                  BlocBuilder<DashboardBloc, DashboardState>(
-                    bloc: dashboardBloc,
-                    builder: (context, state) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          state.cubeStatus.armadoStr == null
-                              ? const Text(
-                                  "-",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                )
-                              : state.cubeStatus.armadoStr == "ARMED"
-                                  ? Text(
-                                      state.cubeStatus.armadoStr ?? '',
-                                      style: const TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    )
-                                  : Text(
-                                      state.cubeStatus.armadoStr ?? '-',
-                                      style: const TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    )
-                                      .animate(
-                                        onPlay: (controller) =>
-                                            controller.repeat(reverse: true),
-                                      )
-                                      .fadeOut(
-                                        delay: 200.milliseconds,
-                                      ),
-                          const SizedBox(
-                            height: 20,
-                            child: VerticalDivider(
-                              thickness: 2,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            state.cubeStatus.mode ?? '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                            child: VerticalDivider(
-                              thickness: 2,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          if (state.roverStatus.latencyStatus == "1")
-                            Text(
-                              "${state.currentLatencyPing} ms.",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                  // BlocBuilder<DashboardBloc, DashboardState>(
+                  //   bloc: dashboardBloc,
+                  //   builder: (context, state) {
+                  //     return Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         state.cubeStatus.armadoStr == null
+                  //             ? const Text(
+                  //                 "-",
+                  //                 style: TextStyle(
+                  //                   color: Colors.white,
+                  //                   fontSize: 18,
+                  //                   fontWeight: FontWeight.w900,
+                  //                 ),
+                  //               )
+                  //             : state.cubeStatus.armadoStr == "ARMED"
+                  //                 ? Text(
+                  //                     state.cubeStatus.armadoStr ?? '',
+                  //                     style: const TextStyle(
+                  //                       color: Colors.green,
+                  //                       fontSize: 18,
+                  //                       fontWeight: FontWeight.w900,
+                  //                     ),
+                  //                   )
+                  //                 : Text(
+                  //                     state.cubeStatus.armadoStr ?? '-',
+                  //                     style: const TextStyle(
+                  //                       color: Colors.red,
+                  //                       fontSize: 40,
+                  //                       fontWeight: FontWeight.w900,
+                  //                     ),
+                  //                   )
+                  //                     .animate(
+                  //                       onPlay: (controller) =>
+                  //                           controller.repeat(reverse: true),
+                  //                     )
+                  //                     .fadeOut(
+                  //                       delay: 200.milliseconds,
+                  //                     ),
+                  //         const SizedBox(
+                  //           height: 20,
+                  //           child: VerticalDivider(
+                  //             thickness: 2,
+                  //             color: Colors.grey,
+                  //           ),
+                  //         ),
+                  //         Text(
+                  //           state.cubeStatus.mode ?? '',
+                  //           style: const TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 18,
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //         ),
+                  //         const SizedBox(
+                  //           height: 20,
+                  //           child: VerticalDivider(
+                  //             thickness: 2,
+                  //             color: Colors.grey,
+                  //           ),
+                  //         ),
+                  //         if (state.roverStatus.latencyStatus == "1")
+                  //           Text(
+                  //             "${state.currentLatencyPing} ms.",
+                  //             style: const TextStyle(
+                  //               color: Colors.white,
+                  //               fontSize: 18,
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //       ],
+                  //     );
+                  //   },
+                  // ),
                   const SizedBox(height: 5),
                   BlocBuilder<DashboardBloc, DashboardState>(
                     bloc: dashboardBloc,

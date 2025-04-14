@@ -29,6 +29,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final SessionBloc sessionBloc;
   Timer? _timer;
   Timer? _timerUpdateUser;
+  Timer? _timerHeartbeat;
   io.Socket? socket;
 
   DashboardBloc(this.roverRepository, this.preferencesRepository,
@@ -436,6 +437,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     });
   }
 
+  void heartbeat() async {
+    _timerHeartbeat?.cancel();
+    _timerHeartbeat = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (socket!.connected) {
+        print("heartbeat --------------------------");
+        socket!.emit('heartbeat', {'time': DateTime.now().toIso8601String()});
+      }
+    });
+  }
+
   void initSocket() {
     socket = null;
     socket = io.io(
@@ -446,6 +457,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     socket!.onConnect((_) {
       add(const DashboardSetSocketConnectedEvent(true));
       updateUser();
+      heartbeat();
     });
     socket!.on("latency", (data) {
       final latencyPing = data["ping_time"]?.toDouble();
