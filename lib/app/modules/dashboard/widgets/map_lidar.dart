@@ -38,8 +38,8 @@ class RadarPainter extends CustomPainter {
 
     try {
       // Draw background image as watermark
-      final image = AssetImage("assets/icons/patioRobot.png");
-      final imageConfiguration = ImageConfiguration();
+      const image = AssetImage("assets/icons/patioRobot.png");
+      const imageConfiguration = ImageConfiguration();
       image.resolve(imageConfiguration).addListener(
         ImageStreamListener(
           (ImageInfo info, bool _) {
