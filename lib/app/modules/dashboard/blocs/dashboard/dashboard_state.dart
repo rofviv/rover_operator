@@ -17,6 +17,8 @@ class DashboardState extends Equatable {
   final double distanceSonar3;
   final double distanceSonar4;
 
+  final List<List<double>> pointsLidarDistanceAngle;
+
   final RoverStatusModel roverStatus;
   final RelayModel relay;
   final CubeStatusModel cubeStatus;
@@ -49,6 +51,7 @@ class DashboardState extends Equatable {
     this.currentLatencyPing = 0,
     this.currentLatencyAlert = false,
     this.mapHeight = 600,
+    this.pointsLidarDistanceAngle = const [],
   });
 
   DashboardState copyWith({
@@ -73,6 +76,7 @@ class DashboardState extends Equatable {
     double? currentLatencyPing,
     bool? currentLatencyAlert,
     double? mapHeight,
+    List<List<double>>? pointsLidarDistanceAngle,
   }) {
     return DashboardState(
       activeSound: activeSound ?? this.activeSound,
@@ -96,6 +100,8 @@ class DashboardState extends Equatable {
       currentLatencyPing: currentLatencyPing ?? this.currentLatencyPing,
       currentLatencyAlert: currentLatencyAlert ?? this.currentLatencyAlert,
       mapHeight: mapHeight ?? this.mapHeight,
+      pointsLidarDistanceAngle:
+      pointsLidarDistanceAngle ?? this.pointsLidarDistanceAngle,
     );
   }
 
@@ -122,5 +128,6 @@ class DashboardState extends Equatable {
         currentLatencyPing,
         currentLatencyAlert,
         mapHeight,
+        pointsLidarDistanceAngle,
       ];
 }

@@ -89,16 +89,16 @@ class SettingsScreen extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {
-                            dashboardBloc.add(
-                                DashboardSetMapHeightEvent(state.mapHeight - 10));
+                            dashboardBloc.add(DashboardSetMapHeightEvent(
+                                state.mapHeight - 10));
                           },
                           icon: const Icon(Icons.remove),
                         ),
                         Text('${state.mapHeight}'),
                         IconButton(
                           onPressed: () {
-                            dashboardBloc.add(
-                                DashboardSetMapHeightEvent(state.mapHeight + 10));
+                            dashboardBloc.add(DashboardSetMapHeightEvent(
+                                state.mapHeight + 10));
                           },
                           icon: const Icon(Icons.add),
                         ),
@@ -299,6 +299,91 @@ class SettingsScreen extends StatelessWidget {
                           .toList(),
                       onChanged: (value) {
                         dashboardBloc.setRelays(Relays.retro, value ?? 0);
+                      },
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Lidar distance',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      value: state.roverStatus.lidarDistance ?? "0",
+                      items: [
+                        '0',
+                        '1000',
+                        '1500',
+                        '2000',
+                        '2500',
+                        '3000',
+                        '3500',
+                        '4000',
+                        '4500',
+                        '5000',
+                        '5500',
+                        '6000',
+                        '6500',
+                        '7000',
+                        '7500',
+                        '8000',
+                        '8500',
+                        '9000',
+                        '9500',
+                        '10000'
+                      ]
+                          .map(
+                            (e) => DropdownMenuItem<String>(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setLidarDistance(value ?? "0");
+                      },
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Lidar angle',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      value: state.roverStatus.lidarAngle ?? "0",
+                      items: [
+                        '0',
+                        '45',
+                        '90',
+                        '135',
+                        '180',
+                        '225',
+                        '270',
+                        '315',
+                        '360'
+                      ]
+                          .map(
+                            (e) => DropdownMenuItem<String>(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        dashboardBloc.setLidarAngle(value ?? "0");
                       },
                     ),
                   ],

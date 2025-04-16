@@ -12,6 +12,8 @@ abstract class RoverRepository {
   Future<RoverStatusModel> setSonarBackSensor(String baseUrl, bool sonarSensor);
   Future<RoverStatusModel> setLatency(String baseUrl, bool latency);
   Future<RoverStatusModel> setLidar(String baseUrl, bool lidar);
+  Future<RoverStatusModel> setLidarDistance(String baseUrl, String lidarDistance);
+  Future<RoverStatusModel> setLidarAngle(String baseUrl, String lidarAngle);
 }
 
 class RoverRepositoryImpl implements RoverRepository {
@@ -107,6 +109,36 @@ class RoverRepositoryImpl implements RoverRepository {
         'http://$baseUrl/set_lidar_status',
         data: {
           'lidar_status': lidar ? "1" : "0",
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  
+  @override
+  Future<RoverStatusModel> setLidarDistance(String baseUrl, String lidarDistance) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_lidar_distance',
+        data: {
+          'lidar_distance': lidarDistance,
+        },
+      );
+      return RoverStatusModel.fromJson(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  
+  @override
+  Future<RoverStatusModel> setLidarAngle(String baseUrl, String lidarAngle) async {
+    try {
+      final response = await dio.post(
+        'http://$baseUrl/set_lidar_angle',
+        data: {
+          'lidar_angle': lidarAngle,
         },
       );
       return RoverStatusModel.fromJson(response.data);

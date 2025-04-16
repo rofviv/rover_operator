@@ -118,3 +118,11 @@ class DashboardSetMapHeightEvent extends DashboardEvent {
   final double mapHeight;
   const DashboardSetMapHeightEvent(this.mapHeight);
 }
+
+class DashboardSetDistanceLidarEvent extends DashboardEvent {
+  final double distanceLidar;
+  final double angleLidar;
+  final bool clear;
+  const DashboardSetDistanceLidarEvent(this.distanceLidar, this.angleLidar,
+      {this.clear = false});
+}

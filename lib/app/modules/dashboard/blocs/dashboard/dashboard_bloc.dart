@@ -30,6 +30,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Timer? _timer;
   Timer? _timerUpdateUser;
   Timer? _timerHeartbeat;
+  Timer? _timerClearLidar;
   io.Socket? socket;
 
   DashboardBloc(this.roverRepository, this.preferencesRepository,
@@ -231,6 +232,24 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       await preferencesRepository.setMapHeight(event.mapHeight.toString());
       emit(state.copyWith(mapHeight: event.mapHeight));
     });
+    on<DashboardSetDistanceLidarEvent>((event, emit) {
+      List<List<double>> list = [];
+      if (!event.clear) {
+        list = [...state.pointsLidarDistanceAngle];
+        bool isDuplicate = list.any((point) =>
+            point[0] == event.distanceLidar && point[1] == event.angleLidar);
+
+        if (!isDuplicate) {
+          list.add([event.distanceLidar, event.angleLidar]);
+          if (list.length >
+              (500 + (double.parse(state.roverStatus.lidarAngle ?? "0")) + ((double.parse(state.roverStatus.lidarDistance ?? "0")) * 0.1))) {
+            list.removeAt(0);
+          }
+        }
+        debounceClearLidar();
+      }
+      emit(state.copyWith(pointsLidarDistanceAngle: list));
+    });
     init();
   }
 
@@ -253,6 +272,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       syncDataRover();
     }
     _readRelayNumber();
+  }
+
+  void debounceClearLidar() {
+    _timerClearLidar?.cancel();
+    _timerClearLidar = Timer(const Duration(milliseconds: 200), () {
+      add(const DashboardSetDistanceLidarEvent(0, 0, clear: true));
+    });
   }
 
   void _readRelayNumber() async {
@@ -421,10 +447,21 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         state.roverStatus.copyWith(lidarStatus: res.lidarStatus)));
   }
 
+  void setLidarDistance(String lidarDistance) async {
+    final res = await roverRepository.setLidarDistance(state.ipRemote, lidarDistance);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(lidarDistance: res.lidarDistance)));
+  }
+
+  void setLidarAngle(String lidarAngle) async {
+    final res = await roverRepository.setLidarAngle(state.ipRemote, lidarAngle);
+    add(DashboardSetRoverStatusEvent(
+        state.roverStatus.copyWith(lidarAngle: res.lidarAngle)));
+  }
+
   void updateUser() async {
     _timerUpdateUser?.cancel();
     _timerUpdateUser = Timer.periodic(const Duration(seconds: 60), (timer) {
-      print("updateUser --------------------------");
       if (state.cubeStatus.lat != null && state.cubeStatus.lon != null) {
         sessionBloc.updateUser(
           UpdateUserDto(
@@ -496,7 +533,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         }
       }
       if (data["sensor"] == "lidar") {
-        // TODO: Implementar el lidar
+        add(DashboardSetDistanceLidarEvent(
+            data["distance"]?.toDouble() ?? 0, data["angle"]?.toDouble() ?? 0));
       }
     });
     socket!.onDisconnect(

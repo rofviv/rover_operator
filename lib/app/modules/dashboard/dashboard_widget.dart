@@ -41,11 +41,26 @@ class DashboardWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   DashboardActionsWidget(dashboardBloc: dashboardBloc),
-                  // RadarWidget(points: [
-                  //   {"distance": 53.3, "angle": 45.5},
-                  //   {"distance": 40.0, "angle": 60.0},
-                  //   {"distance": 70.0, "angle": 80.0},
-                  // ]),
+                  BlocBuilder<DashboardBloc, DashboardState>(
+                    bloc: dashboardBloc,
+                    builder: (context, state) {
+                      if (state.roverStatus.lidarStatus == "0") {
+                        return const SizedBox();
+                      }
+                      return RadarWidget(
+                        points: [
+                          ...state.pointsLidarDistanceAngle.map(
+                            (e) => {"distance": e[0], "angle": e[1]},
+                          ),
+                        ],
+                        maxDistance: double.parse(
+                            state.roverStatus.lidarDistance ?? '600'),
+                        angle:
+                            double.parse(state.roverStatus.lidarAngle ?? '0'),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   // const SizedBox(height: 20),
                   // BlocBuilder<DashboardBloc, DashboardState>(
                   //   bloc: dashboardBloc,

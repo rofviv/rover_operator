@@ -229,10 +229,10 @@ class DashboardActionsWidget extends StatelessWidget {
                                   child: Image.asset(
                                     'assets/icons/car_door_back.png',
                                     width: state.sizeIcon,
-                                    color: state.relaysMap[Relays.doorBack]!
-                                        .status
-                                        ? Colors.amberAccent
-                                        : Colors.grey.shade700,
+                                    color:
+                                        state.relaysMap[Relays.doorBack]!.status
+                                            ? Colors.amberAccent
+                                            : Colors.grey.shade700,
                                   ),
                                 ),
                               ),
@@ -349,7 +349,7 @@ class DashboardActionsWidget extends StatelessWidget {
                             const SizedBox(width: 10),
                             Tooltip(
                               message:
-                                  "Lidar (DISTANCE: ${state.roverStatus.lidarDistance} cm. ANGLE: ${state.roverStatus.lidarAngle}°)",
+                                  "Lidar (DISTANCE: ${(double.parse(state.roverStatus.lidarDistance ?? '0') * 0.1) >= 100 ? (double.parse(state.roverStatus.lidarDistance ?? '0') * 0.001).toStringAsFixed(1) : (double.parse(state.roverStatus.lidarDistance ?? '0') * 0.1).toStringAsFixed(0)} ${(double.parse(state.roverStatus.lidarDistance ?? '0') * 0.1) >= 100 ? "m" : "cm"}. ANGLE: ${state.roverStatus.lidarAngle}°)",
                               child: GestureDetector(
                                 onTap: () {
                                   dashboardBloc.setLidar();
