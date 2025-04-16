@@ -79,6 +79,38 @@ class SettingsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
+                      'Lidar Height:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            dashboardBloc.add(DashboardSetLidarHeightEvent(
+                                state.lidarHeight - 10));
+                          },
+                          icon: const Icon(Icons.remove),
+                        ),
+                        Text('${state.lidarHeight}'),
+                        IconButton(
+                          onPressed: () {
+                            dashboardBloc.add(DashboardSetLidarHeightEvent(
+                                state.lidarHeight + 10));
+                          },
+                          icon: const Icon(Icons.add),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
                       'Map Height:',
                       style: TextStyle(
                         fontSize: 16,

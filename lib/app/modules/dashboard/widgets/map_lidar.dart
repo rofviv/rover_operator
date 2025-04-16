@@ -5,17 +5,18 @@ class RadarWidget extends StatelessWidget {
   final List<Map<String, double>> points;
   final double maxDistance;
   final double angle;
-
+  final double lidarHeight;
   const RadarWidget(
       {super.key,
       required this.points,
       required this.maxDistance,
-      required this.angle});
+      required this.angle,
+      required this.lidarHeight});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: const Size(500, 500),
+      size: Size(lidarHeight, lidarHeight),
       painter:
           RadarPainter(points: points, maxDistance: maxDistance, angle: angle),
     );

@@ -28,6 +28,7 @@ class DashboardState extends Equatable {
   final bool currentLatencyAlert;
 
   final double mapHeight;
+  final double lidarHeight;
 
   const DashboardState({
     this.activeSound = true,
@@ -52,6 +53,7 @@ class DashboardState extends Equatable {
     this.currentLatencyAlert = false,
     this.mapHeight = 600,
     this.pointsLidarDistanceAngle = const [],
+    this.lidarHeight = 500,
   });
 
   DashboardState copyWith({
@@ -77,6 +79,7 @@ class DashboardState extends Equatable {
     bool? currentLatencyAlert,
     double? mapHeight,
     List<List<double>>? pointsLidarDistanceAngle,
+    double? lidarHeight,
   }) {
     return DashboardState(
       activeSound: activeSound ?? this.activeSound,
@@ -101,7 +104,8 @@ class DashboardState extends Equatable {
       currentLatencyAlert: currentLatencyAlert ?? this.currentLatencyAlert,
       mapHeight: mapHeight ?? this.mapHeight,
       pointsLidarDistanceAngle:
-      pointsLidarDistanceAngle ?? this.pointsLidarDistanceAngle,
+          pointsLidarDistanceAngle ?? this.pointsLidarDistanceAngle,
+      lidarHeight: lidarHeight ?? this.lidarHeight,
     );
   }
 
@@ -129,5 +133,6 @@ class DashboardState extends Equatable {
         currentLatencyAlert,
         mapHeight,
         pointsLidarDistanceAngle,
+        lidarHeight,
       ];
 }

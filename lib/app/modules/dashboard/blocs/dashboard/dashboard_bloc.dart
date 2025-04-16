@@ -250,6 +250,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       }
       emit(state.copyWith(pointsLidarDistanceAngle: list));
     });
+    on<DashboardSetLidarHeightEvent>((event, emit) async {
+      await preferencesRepository.setLidarHeight(event.lidarHeight.toString());
+      emit(state.copyWith(lidarHeight: event.lidarHeight));
+    });
     init();
   }
 
@@ -257,11 +261,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final ipRemote = await preferencesRepository.ipRemote;
     final sizeIcon = await preferencesRepository.sizeIcon;
     final mapHeight = await preferencesRepository.mapHeight;
+    final lidarHeight = await preferencesRepository.lidarHeight;
     if (sizeIcon != null) {
       add(DashboardSizeIconEvent(double.parse(sizeIcon)));
     }
     if (mapHeight != null) {
       add(DashboardSetMapHeightEvent(double.parse(mapHeight)));
+    }
+    if (lidarHeight != null) {
+      add(DashboardSetLidarHeightEvent(double.parse(lidarHeight)));
     }
     if (ipRemote != null) {
       ipRemoteControler.text = ipRemote;

@@ -126,3 +126,8 @@ class DashboardSetDistanceLidarEvent extends DashboardEvent {
   const DashboardSetDistanceLidarEvent(this.distanceLidar, this.angleLidar,
       {this.clear = false});
 }
+
+class DashboardSetLidarHeightEvent extends DashboardEvent {
+  final double lidarHeight;
+  const DashboardSetLidarHeightEvent(this.lidarHeight);
+}

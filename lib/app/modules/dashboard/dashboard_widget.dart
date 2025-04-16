@@ -48,6 +48,7 @@ class DashboardWidget extends StatelessWidget {
                         return const SizedBox();
                       }
                       return RadarWidget(
+                        lidarHeight: state.lidarHeight,
                         points: [
                           ...state.pointsLidarDistanceAngle.map(
                             (e) => {"distance": e[0], "angle": e[1]},
