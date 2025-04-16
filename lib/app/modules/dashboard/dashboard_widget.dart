@@ -41,25 +41,29 @@ class DashboardWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 30),
                   DashboardActionsWidget(dashboardBloc: dashboardBloc),
-                  BlocBuilder<DashboardBloc, DashboardState>(
-                    bloc: dashboardBloc,
-                    builder: (context, state) {
-                      if (state.roverStatus.lidarStatus == "0") {
-                        return const SizedBox();
-                      }
-                      return RadarWidget(
-                        lidarHeight: state.lidarHeight,
-                        points: [
-                          ...state.pointsLidarDistanceAngle.map(
-                            (e) => {"distance": e[0], "angle": e[1]},
-                          ),
-                        ],
-                        maxDistance: double.parse(
-                            state.roverStatus.lidarDistance ?? '600'),
-                        angle:
-                            double.parse(state.roverStatus.lidarAngle ?? '0'),
-                      );
-                    },
+                  Stack(
+                    children: [
+                      BlocBuilder<DashboardBloc, DashboardState>(
+                        bloc: dashboardBloc,
+                        builder: (context, state) {
+                          if (state.roverStatus.lidarStatus == "0") {
+                            return const SizedBox();
+                          }
+                          return RadarWidget(
+                            lidarHeight: state.lidarHeight,
+                            points: [
+                              ...state.pointsLidarDistanceAngle.map(
+                                (e) => {"distance": e[0], "angle": e[1]},
+                              ),
+                            ],
+                            maxDistance: double.parse(
+                                state.roverStatus.lidarDistance ?? '600'),
+                            angle: double.parse(
+                                state.roverStatus.lidarAngle ?? '0'),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   // const SizedBox(height: 20),

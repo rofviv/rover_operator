@@ -36,11 +36,55 @@ class RadarPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width, size.height) / 2;
 
+    try {
+      // Draw background image as watermark
+      final image = AssetImage("assets/icons/patioRobot.png");
+      final imageConfiguration = ImageConfiguration();
+      image.resolve(imageConfiguration).addListener(
+        ImageStreamListener(
+          (ImageInfo info, bool _) {
+            // Calculate first circle radius (1000 units)
+            double firstCircleRadius = (1000 / (maxDistance + 20)) * radius;
+
+            // Calculate aspect ratio and position image 15% above and 75% below center
+            final aspectRatio = info.image.width / info.image.height;
+            final imgCenter = Offset(
+              center.dx,
+              center.dy + (radius * 0.1),
+            ); // Shift down by 30% of radius
+
+            // Calculate size maintaining aspect ratio within first circle
+            double imageWidth = firstCircleRadius * 2 * 0.8;
+            double imageHeight = imageWidth / aspectRatio;
+
+            // Ensure height doesn't exceed circle
+            if (imageHeight > firstCircleRadius * 2 * 0.8) {
+              imageHeight = firstCircleRadius * 2 * 0.8;
+              imageWidth = imageHeight * aspectRatio;
+            }
+
+            final imageRect = Rect.fromCenter(
+                center: imgCenter, width: imageWidth, height: imageHeight);
+
+            canvas.drawImageRect(
+              info.image,
+              Rect.fromLTWH(0, 0, info.image.width.toDouble(),
+                  info.image.height.toDouble()),
+              imageRect,
+              Paint(),
+            );
+          },
+        ),
+      );
+    } catch (e) {
+      //
+    }
+
     final paintBackground = Paint()
       ..shader = const RadialGradient(
         colors: [
-          Color.fromARGB(255, 126, 123, 123),
-          Color.fromARGB(255, 220, 220, 224)
+          Color.fromARGB(100, 126, 123, 123),
+          Color.fromARGB(100, 220, 220, 224)
         ],
         stops: [0.3, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: radius));

@@ -35,7 +35,7 @@ Future<void> main() async {
   );
 
   doWhenWindowReady(() {
-    const minSize = Size(600, 180);
+    const minSize = Size(10, 10);
     const size = Size(900, 560);
     appWindow.minSize = minSize;
     appWindow.size = size;
